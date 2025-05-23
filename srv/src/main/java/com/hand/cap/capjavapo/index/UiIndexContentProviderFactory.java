@@ -23,16 +23,19 @@ public class UiIndexContentProviderFactory implements IndexContentProviderFactor
 
     private static class UiIndexContentProvider implements IndexContentProvider {
 
-        private static final String ENDPOINT_START = ""
-                + "                <ul>\n";
+        private static final String ENDPOINT_START = """
+                                                                     <ul>
+                                                     """;
 
-        private static final String ENDPOINT = ""
-                + "                    <li>\n"
-                + "                        <a href=\"%s\">%s</a>\n"
-                + "                    </li>\n";
+        private static final String ENDPOINT = """
+                                                                   <li>
+                                                                       <a href="%s">%s</a>
+                                                                   </li>
+                                               """;
 
-        private static final String ENDPOINT_END = ""
-                + "                </ul>\n";
+        private static final String ENDPOINT_END = """
+                                                                   </ul>
+                                                   """;
 
         @Override
         public String getSectionTitle() {
