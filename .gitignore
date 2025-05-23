@@ -1,6 +1,7 @@
 **/gen/
 **/edmx/
 *.db
+sqlite*
 *.sqlite
 *.sqlite-wal
 *.sqlite-shm
