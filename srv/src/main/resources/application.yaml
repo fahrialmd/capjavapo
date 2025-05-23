@@ -1,4 +1,6 @@
 spring:
+  config.activate.on-profile: sqlite
+  web.resources.static-locations: "file:./app"
   datasource:
     url: jdbc:sqlite:../db/sqlite.db
     driver-class-name: org.sqlite.JDBC
