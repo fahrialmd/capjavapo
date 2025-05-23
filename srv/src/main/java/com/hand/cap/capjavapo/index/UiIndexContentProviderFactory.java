@@ -46,7 +46,7 @@ public class UiIndexContentProviderFactory implements IndexContentProviderFactor
         public void writeContent(PrintWriter writer, String contextPath) {
             writer.print(ENDPOINT_START);
             writer.printf(ENDPOINT, contextPath + "fiori.html?sap-ui-xx-viewCache=false",
-                    "template -lunchpad");
+                    "template -launchpad");
             writer.printf(ENDPOINT, contextPath + "/swagger/index.html", "Swagger UI");
             writer.print(ENDPOINT_END);
             writer.print(ENDPOINT_END);
