@@ -1,5 +1,11 @@
+<<<<<<< HEAD
 # application-sqlite.yaml
 spring:
+=======
+spring:
+  config.activate.on-profile: sqlite
+  web.resources.static-locations: "file:./app"
+>>>>>>> flp
   datasource:
     url: jdbc:sqlite:../db/sqlite.db
     driver-class-name: org.sqlite.JDBC
