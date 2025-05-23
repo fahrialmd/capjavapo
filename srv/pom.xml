@@ -45,60 +45,6 @@
         </dependency>
 
         <dependency>
-<<<<<<< HEAD
-            <groupId>org.springdoc</groupId>
-            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-            <version>2.2.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.xerial</groupId>
-            <artifactId>sqlite-jdbc</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-    </dependencies>
-
-    <build>
-        <finalName>${project.artifactId}</finalName>
-        <plugins>
-            <!-- SPRING BOOT PLUGIN -->
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>${spring.boot.version}</version>
-                <configuration>
-                    <skip>false</skip>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>repackage</id>
-                        <goals>
-                            <goal>repackage</goal>
-                        </goals>
-                        <configuration>
-                            <classifier>exec</classifier>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <!-- STEPS TO BUILD CDS MODEL AND GENERATE POJOs -->
-            <plugin>
-                <groupId>com.sap.cds</groupId>
-                <artifactId>cds-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>cds.clean</id>
-                        <goals>
-                            <goal>clean</goal>
-                        </goals>
-                    </execution>
-
-                    <execution>
-                        <id>cds.install-node</id>
-                        <goals>
-                            <goal>install-node</goal>
-=======
             <groupId>org.xerial</groupId>
             <artifactId>sqlite-jdbc</artifactId>
             <scope>runtime</scope>
@@ -149,23 +95,10 @@
                         <id>cds.clean</id>
                         <goals>
                             <goal>clean</goal>
->>>>>>> flp
                         </goals>
                     </execution>
 
                     <execution>
-<<<<<<< HEAD
-                        <id>cds.npm-ci</id>
-                        <goals>
-                            <goal>npm</goal>
-                        </goals>
-                        <configuration>
-                            <arguments>ci</arguments>
-                        </configuration>
-                    </execution>
-
-                    <execution>
-=======
                         <id>cds.install-node</id>
                         <goals>
                             <goal>install-node</goal>
@@ -183,7 +116,6 @@
                     </execution>
 
                     <execution>
->>>>>>> flp
                         <id>cds.resolve</id>
                         <goals>
                             <goal>resolve</goal>
@@ -215,8 +147,6 @@
                     </execution>
                 </executions>
             </plugin>
-<<<<<<< HEAD
-=======
 
             <!-- BUILD HELPER PLUGIN -->
             <plugin>
@@ -239,7 +169,6 @@
                 </executions>
             </plugin>
 
->>>>>>> flp
         </plugins>
     </build>
 
