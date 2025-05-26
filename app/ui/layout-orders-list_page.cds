@@ -54,26 +54,16 @@ annotate AdminService.Orders with @(
             $Type: 'UI.DataField',
             Value: totalNetPrice,
             Label: '{i18n>TotalNetPrice}'
-        },
-        {
-            $Type: 'UI.DataField',
-            Value: currency_code,
-            Label: '{i18n>Currency}'
-        },
-        {
-            $Type: 'UI.DataField',
-            Value: text,
-            Label: '{i18n>Description}'
         }
     ],
     UI.PresentationVariant: {
         Text          : 'Default',
         SortOrder     : [{
             $Type     : 'Common.SortOrderType',
-            Property  : vendor_vendor,
+            Property  : orderNo,
             Descending: false
         }],
-        GroupBy       : [currency_code],
+        GroupBy       : [vendor_vendor],
         Total         : [totalNetPrice],
         Visualizations: ['@UI.LineItem'],
     },
