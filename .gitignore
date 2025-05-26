@@ -32,3 +32,5 @@ hs_err*
 .reloadtrigger
 db/sqlite.db-shm
 db/sqlite.db-wal
+srv/src/main/resources/swagger/openapi.json
+package-lock.json
