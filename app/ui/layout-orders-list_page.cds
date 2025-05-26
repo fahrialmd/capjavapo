@@ -23,10 +23,6 @@ annotate AdminService.Orders with @(
     UI.LineItem           : [
         {
             $Type: 'UI.DataField',
-            Value: ID,
-        },
-        {
-            $Type: 'UI.DataField',
             Value: orderNo,
             Label: '{i18n>OrderNumber}'
         },
@@ -49,6 +45,11 @@ annotate AdminService.Orders with @(
             $Type: 'UI.DataField',
             Value: companyCode_companyCode,
             Label: '{i18n>CompanyCode}'
+        },
+        {
+            $Type: 'UI.DataField',
+            Value: totalStock,
+            Label: '{i18n>TotalStock}'
         },
         {
             $Type: 'UI.DataField',
