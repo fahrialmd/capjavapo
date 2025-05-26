@@ -166,7 +166,13 @@
                   "functionalArea",
                   "functionalArea desc",
                   "deletionIndicator",
-                  "deletionIndicator desc"
+                  "deletionIndicator desc",
+                  "IsActiveEntity",
+                  "IsActiveEntity desc",
+                  "HasActiveEntity",
+                  "HasActiveEntity desc",
+                  "HasDraftEntity",
+                  "HasDraftEntity desc"
                 ]
               }
             }
@@ -195,7 +201,10 @@
                   "GLAccountNo",
                   "costCenter",
                   "functionalArea",
-                  "deletionIndicator"
+                  "deletionIndicator",
+                  "IsActiveEntity",
+                  "HasActiveEntity",
+                  "HasDraftEntity"
                 ]
               }
             }
@@ -212,7 +221,9 @@
                 "type": "string",
                 "enum": [
                   "*",
-                  "parent"
+                  "parent",
+                  "DraftAdministrativeData",
+                  "SiblingEntity"
                 ]
               }
             }
@@ -279,7 +290,7 @@
         }
       }
     },
-    "/Accounts({ID})": {
+    "/Accounts(ID={ID},IsActiveEntity='{IsActiveEntity}')": {
       "parameters": [
         {
           "description": "key: ID",
@@ -290,6 +301,16 @@
             "type": "string",
             "format": "uuid",
             "example": "01234567-89ab-cdef-0123-456789abcdef"
+          }
+        },
+        {
+          "description": "key: IsActiveEntity",
+          "in": "path",
+          "name": "IsActiveEntity",
+          "required": true,
+          "schema": {
+            "type": "boolean",
+            "default": true
           }
         }
       ],
@@ -323,7 +344,10 @@
                   "GLAccountNo",
                   "costCenter",
                   "functionalArea",
-                  "deletionIndicator"
+                  "deletionIndicator",
+                  "IsActiveEntity",
+                  "HasActiveEntity",
+                  "HasDraftEntity"
                 ]
               }
             }
@@ -340,7 +364,9 @@
                 "type": "string",
                 "enum": [
                   "*",
-                  "parent"
+                  "parent",
+                  "DraftAdministrativeData",
+                  "SiblingEntity"
                 ]
               }
             }
@@ -402,7 +428,74 @@
         }
       }
     },
-    "/Accounts({ID})/parent": {
+    "/Accounts(ID={ID},IsActiveEntity='{IsActiveEntity}')/AdminService.draftPrepare": {
+      "post": {
+        "summary": "Invokes action draftPrepare",
+        "tags": [
+          "Accounts"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/AdminService.Accounts"
+                    }
+                  ],
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "#/components/responses/error"
+          }
+        },
+        "parameters": [
+          {
+            "description": "key: ID",
+            "in": "path",
+            "name": "ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "example": "01234567-89ab-cdef-0123-456789abcdef"
+            }
+          },
+          {
+            "description": "key: IsActiveEntity",
+            "in": "path",
+            "name": "IsActiveEntity",
+            "required": true,
+            "schema": {
+              "type": "boolean",
+              "default": true
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Action parameters",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "SideEffectsQualifier": {
+                    "type": "string",
+                    "nullable": true
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Accounts(ID={ID},IsActiveEntity='{IsActiveEntity}')/DraftAdministrativeData": {
       "parameters": [
         {
           "description": "key: ID",
@@ -413,6 +506,225 @@
             "type": "string",
             "format": "uuid",
             "example": "01234567-89ab-cdef-0123-456789abcdef"
+          }
+        },
+        {
+          "description": "key: IsActiveEntity",
+          "in": "path",
+          "name": "IsActiveEntity",
+          "required": true,
+          "schema": {
+            "type": "boolean",
+            "default": true
+          }
+        }
+      ],
+      "get": {
+        "summary": "Retrieves draft administrative data of a account.",
+        "tags": [
+          "Accounts"
+        ],
+        "parameters": [
+          {
+            "name": "$select",
+            "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+            "in": "query",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "DraftUUID",
+                  "CreationDateTime",
+                  "CreatedByUser",
+                  "DraftIsCreatedByMe",
+                  "LastChangeDateTime",
+                  "LastChangedByUser",
+                  "InProcessByUser",
+                  "DraftIsProcessedByMe"
+                ]
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retrieved draft administrative data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminService.DraftAdministrativeData"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Changes draft administrative data of a account.",
+        "tags": [
+          "Accounts"
+        ],
+        "requestBody": {
+          "description": "New property values",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdminService.DraftAdministrativeData-update"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "4XX": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Deletes draft administrative data of a account.",
+        "tags": [
+          "Accounts"
+        ],
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "4XX": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    },
+    "/Accounts(ID={ID},IsActiveEntity='{IsActiveEntity}')/SiblingEntity": {
+      "parameters": [
+        {
+          "description": "key: ID",
+          "in": "path",
+          "name": "ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid",
+            "example": "01234567-89ab-cdef-0123-456789abcdef"
+          }
+        },
+        {
+          "description": "key: IsActiveEntity",
+          "in": "path",
+          "name": "IsActiveEntity",
+          "required": true,
+          "schema": {
+            "type": "boolean",
+            "default": true
+          }
+        }
+      ],
+      "get": {
+        "summary": "Retrieves sibling entity of a account.",
+        "tags": [
+          "Accounts"
+        ],
+        "parameters": [
+          {
+            "name": "$select",
+            "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+            "in": "query",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "ID",
+                  "createdAt",
+                  "createdBy",
+                  "modifiedAt",
+                  "modifiedBy",
+                  "parent_ID",
+                  "accountAssgmtNo",
+                  "accountAssignmentCategory",
+                  "unloadingPoint",
+                  "goodsRecipient",
+                  "GLAccountNo",
+                  "costCenter",
+                  "functionalArea",
+                  "deletionIndicator",
+                  "IsActiveEntity",
+                  "HasActiveEntity",
+                  "HasDraftEntity"
+                ]
+              }
+            }
+          },
+          {
+            "name": "$expand",
+            "description": "The value of $expand query option is a comma-separated list of navigation property names, stream property names, or $value indicating the stream content of a media-entity. The corresponding related entities and stream values will be represented inline, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+            "in": "query",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "*",
+                  "parent",
+                  "DraftAdministrativeData",
+                  "SiblingEntity"
+                ]
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retrieved sibling entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminService.Accounts"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    },
+    "/Accounts(ID={ID},IsActiveEntity='{IsActiveEntity}')/parent": {
+      "parameters": [
+        {
+          "description": "key: ID",
+          "in": "path",
+          "name": "ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid",
+            "example": "01234567-89ab-cdef-0123-456789abcdef"
+          }
+        },
+        {
+          "description": "key: IsActiveEntity",
+          "in": "path",
+          "name": "IsActiveEntity",
+          "required": true,
+          "schema": {
+            "type": "boolean",
+            "default": true
           }
         }
       ],
@@ -455,7 +767,10 @@
                   "storageLocation_storageLocation",
                   "deletionIndicator",
                   "text",
-                  "stockIcon"
+                  "stockIcon",
+                  "IsActiveEntity",
+                  "HasActiveEntity",
+                  "HasDraftEntity"
                 ]
               }
             }
@@ -476,7 +791,9 @@
                   "plant",
                   "storageLocation",
                   "accounts",
-                  "attachments"
+                  "attachments",
+                  "DraftAdministrativeData",
+                  "SiblingEntity"
                 ]
               }
             }
@@ -556,7 +873,13 @@
                   "fileType",
                   "fileType desc",
                   "data",
-                  "data desc"
+                  "data desc",
+                  "IsActiveEntity",
+                  "IsActiveEntity desc",
+                  "HasActiveEntity",
+                  "HasActiveEntity desc",
+                  "HasDraftEntity",
+                  "HasDraftEntity desc"
                 ]
               }
             }
@@ -581,7 +904,10 @@
                   "orderItem_ID",
                   "fileName",
                   "fileType",
-                  "data"
+                  "data",
+                  "IsActiveEntity",
+                  "HasActiveEntity",
+                  "HasDraftEntity"
                 ]
               }
             }
@@ -599,7 +925,9 @@
                 "enum": [
                   "*",
                   "order",
-                  "orderItem"
+                  "orderItem",
+                  "DraftAdministrativeData",
+                  "SiblingEntity"
                 ]
               }
             }
@@ -666,7 +994,7 @@
         }
       }
     },
-    "/Attachments({ID})": {
+    "/Attachments(ID={ID},IsActiveEntity='{IsActiveEntity}')": {
       "parameters": [
         {
           "description": "key: ID",
@@ -677,6 +1005,16 @@
             "type": "string",
             "format": "uuid",
             "example": "01234567-89ab-cdef-0123-456789abcdef"
+          }
+        },
+        {
+          "description": "key: IsActiveEntity",
+          "in": "path",
+          "name": "IsActiveEntity",
+          "required": true,
+          "schema": {
+            "type": "boolean",
+            "default": true
           }
         }
       ],
@@ -706,7 +1044,10 @@
                   "orderItem_ID",
                   "fileName",
                   "fileType",
-                  "data"
+                  "data",
+                  "IsActiveEntity",
+                  "HasActiveEntity",
+                  "HasDraftEntity"
                 ]
               }
             }
@@ -724,7 +1065,9 @@
                 "enum": [
                   "*",
                   "order",
-                  "orderItem"
+                  "orderItem",
+                  "DraftAdministrativeData",
+                  "SiblingEntity"
                 ]
               }
             }
@@ -786,7 +1129,74 @@
         }
       }
     },
-    "/Attachments({ID})/order": {
+    "/Attachments(ID={ID},IsActiveEntity='{IsActiveEntity}')/AdminService.draftPrepare": {
+      "post": {
+        "summary": "Invokes action draftPrepare",
+        "tags": [
+          "Attachments"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/AdminService.Attachments"
+                    }
+                  ],
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "#/components/responses/error"
+          }
+        },
+        "parameters": [
+          {
+            "description": "key: ID",
+            "in": "path",
+            "name": "ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "example": "01234567-89ab-cdef-0123-456789abcdef"
+            }
+          },
+          {
+            "description": "key: IsActiveEntity",
+            "in": "path",
+            "name": "IsActiveEntity",
+            "required": true,
+            "schema": {
+              "type": "boolean",
+              "default": true
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Action parameters",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "SideEffectsQualifier": {
+                    "type": "string",
+                    "nullable": true
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Attachments(ID={ID},IsActiveEntity='{IsActiveEntity}')/DraftAdministrativeData": {
       "parameters": [
         {
           "description": "key: ID",
@@ -797,6 +1207,222 @@
             "type": "string",
             "format": "uuid",
             "example": "01234567-89ab-cdef-0123-456789abcdef"
+          }
+        },
+        {
+          "description": "key: IsActiveEntity",
+          "in": "path",
+          "name": "IsActiveEntity",
+          "required": true,
+          "schema": {
+            "type": "boolean",
+            "default": true
+          }
+        }
+      ],
+      "get": {
+        "summary": "Retrieves draft administrative data of a attachment.",
+        "tags": [
+          "Attachments"
+        ],
+        "parameters": [
+          {
+            "name": "$select",
+            "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+            "in": "query",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "DraftUUID",
+                  "CreationDateTime",
+                  "CreatedByUser",
+                  "DraftIsCreatedByMe",
+                  "LastChangeDateTime",
+                  "LastChangedByUser",
+                  "InProcessByUser",
+                  "DraftIsProcessedByMe"
+                ]
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retrieved draft administrative data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminService.DraftAdministrativeData"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Changes draft administrative data of a attachment.",
+        "tags": [
+          "Attachments"
+        ],
+        "requestBody": {
+          "description": "New property values",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdminService.DraftAdministrativeData-update"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "4XX": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Deletes draft administrative data of a attachment.",
+        "tags": [
+          "Attachments"
+        ],
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "4XX": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    },
+    "/Attachments(ID={ID},IsActiveEntity='{IsActiveEntity}')/SiblingEntity": {
+      "parameters": [
+        {
+          "description": "key: ID",
+          "in": "path",
+          "name": "ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid",
+            "example": "01234567-89ab-cdef-0123-456789abcdef"
+          }
+        },
+        {
+          "description": "key: IsActiveEntity",
+          "in": "path",
+          "name": "IsActiveEntity",
+          "required": true,
+          "schema": {
+            "type": "boolean",
+            "default": true
+          }
+        }
+      ],
+      "get": {
+        "summary": "Retrieves sibling entity of a attachment.",
+        "tags": [
+          "Attachments"
+        ],
+        "parameters": [
+          {
+            "name": "$select",
+            "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+            "in": "query",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "ID",
+                  "createdAt",
+                  "createdBy",
+                  "modifiedAt",
+                  "modifiedBy",
+                  "order_ID",
+                  "orderItem_ID",
+                  "fileName",
+                  "fileType",
+                  "data",
+                  "IsActiveEntity",
+                  "HasActiveEntity",
+                  "HasDraftEntity"
+                ]
+              }
+            }
+          },
+          {
+            "name": "$expand",
+            "description": "The value of $expand query option is a comma-separated list of navigation property names, stream property names, or $value indicating the stream content of a media-entity. The corresponding related entities and stream values will be represented inline, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+            "in": "query",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "*",
+                  "order",
+                  "orderItem",
+                  "DraftAdministrativeData",
+                  "SiblingEntity"
+                ]
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retrieved sibling entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminService.Attachments"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    },
+    "/Attachments(ID={ID},IsActiveEntity='{IsActiveEntity}')/order": {
+      "parameters": [
+        {
+          "description": "key: ID",
+          "in": "path",
+          "name": "ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid",
+            "example": "01234567-89ab-cdef-0123-456789abcdef"
+          }
+        },
+        {
+          "description": "key: IsActiveEntity",
+          "in": "path",
+          "name": "IsActiveEntity",
+          "required": true,
+          "schema": {
+            "type": "boolean",
+            "default": true
           }
         }
       ],
@@ -835,7 +1461,10 @@
                   "totalNetPrice",
                   "status_code",
                   "statusIcon",
-                  "isEditable"
+                  "isEditable",
+                  "IsActiveEntity",
+                  "HasActiveEntity",
+                  "HasDraftEntity"
                 ]
               }
             }
@@ -859,7 +1488,9 @@
                   "currency",
                   "items",
                   "status",
-                  "attachments"
+                  "attachments",
+                  "DraftAdministrativeData",
+                  "SiblingEntity"
                 ]
               }
             }
@@ -882,7 +1513,7 @@
         }
       }
     },
-    "/Attachments({ID})/orderItem": {
+    "/Attachments(ID={ID},IsActiveEntity='{IsActiveEntity}')/orderItem": {
       "parameters": [
         {
           "description": "key: ID",
@@ -893,6 +1524,16 @@
             "type": "string",
             "format": "uuid",
             "example": "01234567-89ab-cdef-0123-456789abcdef"
+          }
+        },
+        {
+          "description": "key: IsActiveEntity",
+          "in": "path",
+          "name": "IsActiveEntity",
+          "required": true,
+          "schema": {
+            "type": "boolean",
+            "default": true
           }
         }
       ],
@@ -935,7 +1576,10 @@
                   "storageLocation_storageLocation",
                   "deletionIndicator",
                   "text",
-                  "stockIcon"
+                  "stockIcon",
+                  "IsActiveEntity",
+                  "HasActiveEntity",
+                  "HasDraftEntity"
                 ]
               }
             }
@@ -956,7 +1600,9 @@
                   "plant",
                   "storageLocation",
                   "accounts",
-                  "attachments"
+                  "attachments",
+                  "DraftAdministrativeData",
+                  "SiblingEntity"
                 ]
               }
             }
@@ -1930,7 +2576,13 @@
                   "text",
                   "text desc",
                   "stockIcon",
-                  "stockIcon desc"
+                  "stockIcon desc",
+                  "IsActiveEntity",
+                  "IsActiveEntity desc",
+                  "HasActiveEntity",
+                  "HasActiveEntity desc",
+                  "HasDraftEntity",
+                  "HasDraftEntity desc"
                 ]
               }
             }
@@ -1967,7 +2619,10 @@
                   "storageLocation_storageLocation",
                   "deletionIndicator",
                   "text",
-                  "stockIcon"
+                  "stockIcon",
+                  "IsActiveEntity",
+                  "HasActiveEntity",
+                  "HasDraftEntity"
                 ]
               }
             }
@@ -1988,7 +2643,9 @@
                   "plant",
                   "storageLocation",
                   "accounts",
-                  "attachments"
+                  "attachments",
+                  "DraftAdministrativeData",
+                  "SiblingEntity"
                 ]
               }
             }
@@ -2055,7 +2712,7 @@
         }
       }
     },
-    "/OrderItems({ID})": {
+    "/OrderItems(ID={ID},IsActiveEntity='{IsActiveEntity}')": {
       "parameters": [
         {
           "description": "key: ID",
@@ -2066,6 +2723,16 @@
             "type": "string",
             "format": "uuid",
             "example": "01234567-89ab-cdef-0123-456789abcdef"
+          }
+        },
+        {
+          "description": "key: IsActiveEntity",
+          "in": "path",
+          "name": "IsActiveEntity",
+          "required": true,
+          "schema": {
+            "type": "boolean",
+            "default": true
           }
         }
       ],
@@ -2107,7 +2774,10 @@
                   "storageLocation_storageLocation",
                   "deletionIndicator",
                   "text",
-                  "stockIcon"
+                  "stockIcon",
+                  "IsActiveEntity",
+                  "HasActiveEntity",
+                  "HasDraftEntity"
                 ]
               }
             }
@@ -2128,7 +2798,9 @@
                   "plant",
                   "storageLocation",
                   "accounts",
-                  "attachments"
+                  "attachments",
+                  "DraftAdministrativeData",
+                  "SiblingEntity"
                 ]
               }
             }
@@ -2190,7 +2862,74 @@
         }
       }
     },
-    "/OrderItems({ID})/accounts": {
+    "/OrderItems(ID={ID},IsActiveEntity='{IsActiveEntity}')/AdminService.draftPrepare": {
+      "post": {
+        "summary": "Invokes action draftPrepare",
+        "tags": [
+          "OrderItems"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/AdminService.OrderItems"
+                    }
+                  ],
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "#/components/responses/error"
+          }
+        },
+        "parameters": [
+          {
+            "description": "key: ID",
+            "in": "path",
+            "name": "ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "example": "01234567-89ab-cdef-0123-456789abcdef"
+            }
+          },
+          {
+            "description": "key: IsActiveEntity",
+            "in": "path",
+            "name": "IsActiveEntity",
+            "required": true,
+            "schema": {
+              "type": "boolean",
+              "default": true
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Action parameters",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "SideEffectsQualifier": {
+                    "type": "string",
+                    "nullable": true
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/OrderItems(ID={ID},IsActiveEntity='{IsActiveEntity}')/DraftAdministrativeData": {
       "parameters": [
         {
           "description": "key: ID",
@@ -2201,6 +2940,237 @@
             "type": "string",
             "format": "uuid",
             "example": "01234567-89ab-cdef-0123-456789abcdef"
+          }
+        },
+        {
+          "description": "key: IsActiveEntity",
+          "in": "path",
+          "name": "IsActiveEntity",
+          "required": true,
+          "schema": {
+            "type": "boolean",
+            "default": true
+          }
+        }
+      ],
+      "get": {
+        "summary": "Retrieves draft administrative data of a order item.",
+        "tags": [
+          "OrderItems"
+        ],
+        "parameters": [
+          {
+            "name": "$select",
+            "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+            "in": "query",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "DraftUUID",
+                  "CreationDateTime",
+                  "CreatedByUser",
+                  "DraftIsCreatedByMe",
+                  "LastChangeDateTime",
+                  "LastChangedByUser",
+                  "InProcessByUser",
+                  "DraftIsProcessedByMe"
+                ]
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retrieved draft administrative data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminService.DraftAdministrativeData"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Changes draft administrative data of a order item.",
+        "tags": [
+          "OrderItems"
+        ],
+        "requestBody": {
+          "description": "New property values",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdminService.DraftAdministrativeData-update"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "4XX": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Deletes draft administrative data of a order item.",
+        "tags": [
+          "OrderItems"
+        ],
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "4XX": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    },
+    "/OrderItems(ID={ID},IsActiveEntity='{IsActiveEntity}')/SiblingEntity": {
+      "parameters": [
+        {
+          "description": "key: ID",
+          "in": "path",
+          "name": "ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid",
+            "example": "01234567-89ab-cdef-0123-456789abcdef"
+          }
+        },
+        {
+          "description": "key: IsActiveEntity",
+          "in": "path",
+          "name": "IsActiveEntity",
+          "required": true,
+          "schema": {
+            "type": "boolean",
+            "default": true
+          }
+        }
+      ],
+      "get": {
+        "summary": "Retrieves sibling entity of a order item.",
+        "tags": [
+          "OrderItems"
+        ],
+        "parameters": [
+          {
+            "name": "$select",
+            "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+            "in": "query",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "ID",
+                  "createdAt",
+                  "createdBy",
+                  "modifiedAt",
+                  "modifiedBy",
+                  "parent_ID",
+                  "orderItemNo",
+                  "accountAssignmentCategory",
+                  "itemCategory",
+                  "materialNo",
+                  "materialDescr",
+                  "deliveryDateCategory",
+                  "stock",
+                  "deliveryDate",
+                  "netPrice",
+                  "materialGroup",
+                  "plant_plant",
+                  "storageLocation_plant",
+                  "storageLocation_storageLocation",
+                  "deletionIndicator",
+                  "text",
+                  "stockIcon",
+                  "IsActiveEntity",
+                  "HasActiveEntity",
+                  "HasDraftEntity"
+                ]
+              }
+            }
+          },
+          {
+            "name": "$expand",
+            "description": "The value of $expand query option is a comma-separated list of navigation property names, stream property names, or $value indicating the stream content of a media-entity. The corresponding related entities and stream values will be represented inline, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+            "in": "query",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "*",
+                  "parent",
+                  "plant",
+                  "storageLocation",
+                  "accounts",
+                  "attachments",
+                  "DraftAdministrativeData",
+                  "SiblingEntity"
+                ]
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retrieved sibling entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminService.OrderItems"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    },
+    "/OrderItems(ID={ID},IsActiveEntity='{IsActiveEntity}')/accounts": {
+      "parameters": [
+        {
+          "description": "key: ID",
+          "in": "path",
+          "name": "ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid",
+            "example": "01234567-89ab-cdef-0123-456789abcdef"
+          }
+        },
+        {
+          "description": "key: IsActiveEntity",
+          "in": "path",
+          "name": "IsActiveEntity",
+          "required": true,
+          "schema": {
+            "type": "boolean",
+            "default": true
           }
         }
       ],
@@ -2269,7 +3239,13 @@
                   "functionalArea",
                   "functionalArea desc",
                   "deletionIndicator",
-                  "deletionIndicator desc"
+                  "deletionIndicator desc",
+                  "IsActiveEntity",
+                  "IsActiveEntity desc",
+                  "HasActiveEntity",
+                  "HasActiveEntity desc",
+                  "HasDraftEntity",
+                  "HasDraftEntity desc"
                 ]
               }
             }
@@ -2298,7 +3274,10 @@
                   "GLAccountNo",
                   "costCenter",
                   "functionalArea",
-                  "deletionIndicator"
+                  "deletionIndicator",
+                  "IsActiveEntity",
+                  "HasActiveEntity",
+                  "HasDraftEntity"
                 ]
               }
             }
@@ -2315,7 +3294,9 @@
                 "type": "string",
                 "enum": [
                   "*",
-                  "parent"
+                  "parent",
+                  "DraftAdministrativeData",
+                  "SiblingEntity"
                 ]
               }
             }
@@ -2383,7 +3364,7 @@
         }
       }
     },
-    "/OrderItems({ID})/attachments": {
+    "/OrderItems(ID={ID},IsActiveEntity='{IsActiveEntity}')/attachments": {
       "parameters": [
         {
           "description": "key: ID",
@@ -2394,6 +3375,16 @@
             "type": "string",
             "format": "uuid",
             "example": "01234567-89ab-cdef-0123-456789abcdef"
+          }
+        },
+        {
+          "description": "key: IsActiveEntity",
+          "in": "path",
+          "name": "IsActiveEntity",
+          "required": true,
+          "schema": {
+            "type": "boolean",
+            "default": true
           }
         }
       ],
@@ -2454,7 +3445,13 @@
                   "fileType",
                   "fileType desc",
                   "data",
-                  "data desc"
+                  "data desc",
+                  "IsActiveEntity",
+                  "IsActiveEntity desc",
+                  "HasActiveEntity",
+                  "HasActiveEntity desc",
+                  "HasDraftEntity",
+                  "HasDraftEntity desc"
                 ]
               }
             }
@@ -2479,7 +3476,10 @@
                   "orderItem_ID",
                   "fileName",
                   "fileType",
-                  "data"
+                  "data",
+                  "IsActiveEntity",
+                  "HasActiveEntity",
+                  "HasDraftEntity"
                 ]
               }
             }
@@ -2497,7 +3497,9 @@
                 "enum": [
                   "*",
                   "order",
-                  "orderItem"
+                  "orderItem",
+                  "DraftAdministrativeData",
+                  "SiblingEntity"
                 ]
               }
             }
@@ -2565,7 +3567,7 @@
         }
       }
     },
-    "/OrderItems({ID})/parent": {
+    "/OrderItems(ID={ID},IsActiveEntity='{IsActiveEntity}')/parent": {
       "parameters": [
         {
           "description": "key: ID",
@@ -2576,6 +3578,16 @@
             "type": "string",
             "format": "uuid",
             "example": "01234567-89ab-cdef-0123-456789abcdef"
+          }
+        },
+        {
+          "description": "key: IsActiveEntity",
+          "in": "path",
+          "name": "IsActiveEntity",
+          "required": true,
+          "schema": {
+            "type": "boolean",
+            "default": true
           }
         }
       ],
@@ -2614,7 +3626,10 @@
                   "totalNetPrice",
                   "status_code",
                   "statusIcon",
-                  "isEditable"
+                  "isEditable",
+                  "IsActiveEntity",
+                  "HasActiveEntity",
+                  "HasDraftEntity"
                 ]
               }
             }
@@ -2638,7 +3653,9 @@
                   "currency",
                   "items",
                   "status",
-                  "attachments"
+                  "attachments",
+                  "DraftAdministrativeData",
+                  "SiblingEntity"
                 ]
               }
             }
@@ -2661,7 +3678,7 @@
         }
       }
     },
-    "/OrderItems({ID})/plant": {
+    "/OrderItems(ID={ID},IsActiveEntity='{IsActiveEntity}')/plant": {
       "parameters": [
         {
           "description": "key: ID",
@@ -2672,6 +3689,16 @@
             "type": "string",
             "format": "uuid",
             "example": "01234567-89ab-cdef-0123-456789abcdef"
+          }
+        },
+        {
+          "description": "key: IsActiveEntity",
+          "in": "path",
+          "name": "IsActiveEntity",
+          "required": true,
+          "schema": {
+            "type": "boolean",
+            "default": true
           }
         }
       ],
@@ -2731,7 +3758,7 @@
         }
       }
     },
-    "/OrderItems({ID})/storageLocation": {
+    "/OrderItems(ID={ID},IsActiveEntity='{IsActiveEntity}')/storageLocation": {
       "parameters": [
         {
           "description": "key: ID",
@@ -2742,6 +3769,16 @@
             "type": "string",
             "format": "uuid",
             "example": "01234567-89ab-cdef-0123-456789abcdef"
+          }
+        },
+        {
+          "description": "key: IsActiveEntity",
+          "in": "path",
+          "name": "IsActiveEntity",
+          "required": true,
+          "schema": {
+            "type": "boolean",
+            "default": true
           }
         }
       ],
@@ -2861,7 +3898,13 @@
                   "statusIcon",
                   "statusIcon desc",
                   "isEditable",
-                  "isEditable desc"
+                  "isEditable desc",
+                  "IsActiveEntity",
+                  "IsActiveEntity desc",
+                  "HasActiveEntity",
+                  "HasActiveEntity desc",
+                  "HasDraftEntity",
+                  "HasDraftEntity desc"
                 ]
               }
             }
@@ -2894,7 +3937,10 @@
                   "totalNetPrice",
                   "status_code",
                   "statusIcon",
-                  "isEditable"
+                  "isEditable",
+                  "IsActiveEntity",
+                  "HasActiveEntity",
+                  "HasDraftEntity"
                 ]
               }
             }
@@ -2918,7 +3964,9 @@
                   "currency",
                   "items",
                   "status",
-                  "attachments"
+                  "attachments",
+                  "DraftAdministrativeData",
+                  "SiblingEntity"
                 ]
               }
             }
@@ -2985,7 +4033,7 @@
         }
       }
     },
-    "/Orders({ID})": {
+    "/Orders(ID={ID},IsActiveEntity='{IsActiveEntity}')": {
       "parameters": [
         {
           "description": "key: ID",
@@ -2996,6 +4044,16 @@
             "type": "string",
             "format": "uuid",
             "example": "01234567-89ab-cdef-0123-456789abcdef"
+          }
+        },
+        {
+          "description": "key: IsActiveEntity",
+          "in": "path",
+          "name": "IsActiveEntity",
+          "required": true,
+          "schema": {
+            "type": "boolean",
+            "default": true
           }
         }
       ],
@@ -3033,7 +4091,10 @@
                   "totalNetPrice",
                   "status_code",
                   "statusIcon",
-                  "isEditable"
+                  "isEditable",
+                  "IsActiveEntity",
+                  "HasActiveEntity",
+                  "HasDraftEntity"
                 ]
               }
             }
@@ -3057,7 +4118,9 @@
                   "currency",
                   "items",
                   "status",
-                  "attachments"
+                  "attachments",
+                  "DraftAdministrativeData",
+                  "SiblingEntity"
                 ]
               }
             }
@@ -3119,7 +4182,192 @@
         }
       }
     },
-    "/Orders({ID})/attachments": {
+    "/Orders(ID={ID},IsActiveEntity='{IsActiveEntity}')/AdminService.draftActivate": {
+      "post": {
+        "summary": "Invokes action draftActivate",
+        "tags": [
+          "Orders"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/AdminService.Orders"
+                    }
+                  ],
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "#/components/responses/error"
+          }
+        },
+        "parameters": [
+          {
+            "description": "key: ID",
+            "in": "path",
+            "name": "ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "example": "01234567-89ab-cdef-0123-456789abcdef"
+            }
+          },
+          {
+            "description": "key: IsActiveEntity",
+            "in": "path",
+            "name": "IsActiveEntity",
+            "required": true,
+            "schema": {
+              "type": "boolean",
+              "default": true
+            }
+          }
+        ]
+      }
+    },
+    "/Orders(ID={ID},IsActiveEntity='{IsActiveEntity}')/AdminService.draftEdit": {
+      "post": {
+        "summary": "Invokes action draftEdit",
+        "tags": [
+          "Orders"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/AdminService.Orders"
+                    }
+                  ],
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "#/components/responses/error"
+          }
+        },
+        "parameters": [
+          {
+            "description": "key: ID",
+            "in": "path",
+            "name": "ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "example": "01234567-89ab-cdef-0123-456789abcdef"
+            }
+          },
+          {
+            "description": "key: IsActiveEntity",
+            "in": "path",
+            "name": "IsActiveEntity",
+            "required": true,
+            "schema": {
+              "type": "boolean",
+              "default": true
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Action parameters",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "PreserveChanges": {
+                    "type": "boolean",
+                    "nullable": true
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Orders(ID={ID},IsActiveEntity='{IsActiveEntity}')/AdminService.draftPrepare": {
+      "post": {
+        "summary": "Invokes action draftPrepare",
+        "tags": [
+          "Orders"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/AdminService.Orders"
+                    }
+                  ],
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "#/components/responses/error"
+          }
+        },
+        "parameters": [
+          {
+            "description": "key: ID",
+            "in": "path",
+            "name": "ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "example": "01234567-89ab-cdef-0123-456789abcdef"
+            }
+          },
+          {
+            "description": "key: IsActiveEntity",
+            "in": "path",
+            "name": "IsActiveEntity",
+            "required": true,
+            "schema": {
+              "type": "boolean",
+              "default": true
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Action parameters",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "SideEffectsQualifier": {
+                    "type": "string",
+                    "nullable": true
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Orders(ID={ID},IsActiveEntity='{IsActiveEntity}')/DraftAdministrativeData": {
       "parameters": [
         {
           "description": "key: ID",
@@ -3130,6 +4378,236 @@
             "type": "string",
             "format": "uuid",
             "example": "01234567-89ab-cdef-0123-456789abcdef"
+          }
+        },
+        {
+          "description": "key: IsActiveEntity",
+          "in": "path",
+          "name": "IsActiveEntity",
+          "required": true,
+          "schema": {
+            "type": "boolean",
+            "default": true
+          }
+        }
+      ],
+      "get": {
+        "summary": "Retrieves draft administrative data of a order.",
+        "tags": [
+          "Orders"
+        ],
+        "parameters": [
+          {
+            "name": "$select",
+            "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+            "in": "query",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "DraftUUID",
+                  "CreationDateTime",
+                  "CreatedByUser",
+                  "DraftIsCreatedByMe",
+                  "LastChangeDateTime",
+                  "LastChangedByUser",
+                  "InProcessByUser",
+                  "DraftIsProcessedByMe"
+                ]
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retrieved draft administrative data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminService.DraftAdministrativeData"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Changes draft administrative data of a order.",
+        "tags": [
+          "Orders"
+        ],
+        "requestBody": {
+          "description": "New property values",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdminService.DraftAdministrativeData-update"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "4XX": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Deletes draft administrative data of a order.",
+        "tags": [
+          "Orders"
+        ],
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "4XX": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    },
+    "/Orders(ID={ID},IsActiveEntity='{IsActiveEntity}')/SiblingEntity": {
+      "parameters": [
+        {
+          "description": "key: ID",
+          "in": "path",
+          "name": "ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid",
+            "example": "01234567-89ab-cdef-0123-456789abcdef"
+          }
+        },
+        {
+          "description": "key: IsActiveEntity",
+          "in": "path",
+          "name": "IsActiveEntity",
+          "required": true,
+          "schema": {
+            "type": "boolean",
+            "default": true
+          }
+        }
+      ],
+      "get": {
+        "summary": "Retrieves sibling entity of a order.",
+        "tags": [
+          "Orders"
+        ],
+        "parameters": [
+          {
+            "name": "$select",
+            "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+            "in": "query",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "ID",
+                  "createdAt",
+                  "createdBy",
+                  "modifiedAt",
+                  "modifiedBy",
+                  "orderNo",
+                  "vendor_vendor",
+                  "purchOrg_purchOrg",
+                  "purchGroup_purchGroup",
+                  "companyCode_companyCode",
+                  "currency_code",
+                  "text",
+                  "note",
+                  "totalStock",
+                  "totalNetPrice",
+                  "status_code",
+                  "statusIcon",
+                  "isEditable",
+                  "IsActiveEntity",
+                  "HasActiveEntity",
+                  "HasDraftEntity"
+                ]
+              }
+            }
+          },
+          {
+            "name": "$expand",
+            "description": "The value of $expand query option is a comma-separated list of navigation property names, stream property names, or $value indicating the stream content of a media-entity. The corresponding related entities and stream values will be represented inline, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+            "in": "query",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "*",
+                  "vendor",
+                  "purchOrg",
+                  "purchGroup",
+                  "companyCode",
+                  "currency",
+                  "items",
+                  "status",
+                  "attachments",
+                  "DraftAdministrativeData",
+                  "SiblingEntity"
+                ]
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retrieved sibling entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminService.Orders"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    },
+    "/Orders(ID={ID},IsActiveEntity='{IsActiveEntity}')/attachments": {
+      "parameters": [
+        {
+          "description": "key: ID",
+          "in": "path",
+          "name": "ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid",
+            "example": "01234567-89ab-cdef-0123-456789abcdef"
+          }
+        },
+        {
+          "description": "key: IsActiveEntity",
+          "in": "path",
+          "name": "IsActiveEntity",
+          "required": true,
+          "schema": {
+            "type": "boolean",
+            "default": true
           }
         }
       ],
@@ -3190,7 +4668,13 @@
                   "fileType",
                   "fileType desc",
                   "data",
-                  "data desc"
+                  "data desc",
+                  "IsActiveEntity",
+                  "IsActiveEntity desc",
+                  "HasActiveEntity",
+                  "HasActiveEntity desc",
+                  "HasDraftEntity",
+                  "HasDraftEntity desc"
                 ]
               }
             }
@@ -3215,7 +4699,10 @@
                   "orderItem_ID",
                   "fileName",
                   "fileType",
-                  "data"
+                  "data",
+                  "IsActiveEntity",
+                  "HasActiveEntity",
+                  "HasDraftEntity"
                 ]
               }
             }
@@ -3233,7 +4720,9 @@
                 "enum": [
                   "*",
                   "order",
-                  "orderItem"
+                  "orderItem",
+                  "DraftAdministrativeData",
+                  "SiblingEntity"
                 ]
               }
             }
@@ -3301,7 +4790,7 @@
         }
       }
     },
-    "/Orders({ID})/companyCode": {
+    "/Orders(ID={ID},IsActiveEntity='{IsActiveEntity}')/companyCode": {
       "parameters": [
         {
           "description": "key: ID",
@@ -3312,6 +4801,16 @@
             "type": "string",
             "format": "uuid",
             "example": "01234567-89ab-cdef-0123-456789abcdef"
+          }
+        },
+        {
+          "description": "key: IsActiveEntity",
+          "in": "path",
+          "name": "IsActiveEntity",
+          "required": true,
+          "schema": {
+            "type": "boolean",
+            "default": true
           }
         }
       ],
@@ -3362,7 +4861,7 @@
         }
       }
     },
-    "/Orders({ID})/currency": {
+    "/Orders(ID={ID},IsActiveEntity='{IsActiveEntity}')/currency": {
       "parameters": [
         {
           "description": "key: ID",
@@ -3373,6 +4872,16 @@
             "type": "string",
             "format": "uuid",
             "example": "01234567-89ab-cdef-0123-456789abcdef"
+          }
+        },
+        {
+          "description": "key: IsActiveEntity",
+          "in": "path",
+          "name": "IsActiveEntity",
+          "required": true,
+          "schema": {
+            "type": "boolean",
+            "default": true
           }
         }
       ],
@@ -3439,7 +4948,7 @@
         }
       }
     },
-    "/Orders({ID})/items": {
+    "/Orders(ID={ID},IsActiveEntity='{IsActiveEntity}')/items": {
       "parameters": [
         {
           "description": "key: ID",
@@ -3450,6 +4959,16 @@
             "type": "string",
             "format": "uuid",
             "example": "01234567-89ab-cdef-0123-456789abcdef"
+          }
+        },
+        {
+          "description": "key: IsActiveEntity",
+          "in": "path",
+          "name": "IsActiveEntity",
+          "required": true,
+          "schema": {
+            "type": "boolean",
+            "default": true
           }
         }
       ],
@@ -3534,7 +5053,13 @@
                   "text",
                   "text desc",
                   "stockIcon",
-                  "stockIcon desc"
+                  "stockIcon desc",
+                  "IsActiveEntity",
+                  "IsActiveEntity desc",
+                  "HasActiveEntity",
+                  "HasActiveEntity desc",
+                  "HasDraftEntity",
+                  "HasDraftEntity desc"
                 ]
               }
             }
@@ -3571,7 +5096,10 @@
                   "storageLocation_storageLocation",
                   "deletionIndicator",
                   "text",
-                  "stockIcon"
+                  "stockIcon",
+                  "IsActiveEntity",
+                  "HasActiveEntity",
+                  "HasDraftEntity"
                 ]
               }
             }
@@ -3592,7 +5120,9 @@
                   "plant",
                   "storageLocation",
                   "accounts",
-                  "attachments"
+                  "attachments",
+                  "DraftAdministrativeData",
+                  "SiblingEntity"
                 ]
               }
             }
@@ -3660,7 +5190,7 @@
         }
       }
     },
-    "/Orders({ID})/purchGroup": {
+    "/Orders(ID={ID},IsActiveEntity='{IsActiveEntity}')/purchGroup": {
       "parameters": [
         {
           "description": "key: ID",
@@ -3671,6 +5201,16 @@
             "type": "string",
             "format": "uuid",
             "example": "01234567-89ab-cdef-0123-456789abcdef"
+          }
+        },
+        {
+          "description": "key: IsActiveEntity",
+          "in": "path",
+          "name": "IsActiveEntity",
+          "required": true,
+          "schema": {
+            "type": "boolean",
+            "default": true
           }
         }
       ],
@@ -3720,7 +5260,7 @@
         }
       }
     },
-    "/Orders({ID})/purchOrg": {
+    "/Orders(ID={ID},IsActiveEntity='{IsActiveEntity}')/purchOrg": {
       "parameters": [
         {
           "description": "key: ID",
@@ -3731,6 +5271,16 @@
             "type": "string",
             "format": "uuid",
             "example": "01234567-89ab-cdef-0123-456789abcdef"
+          }
+        },
+        {
+          "description": "key: IsActiveEntity",
+          "in": "path",
+          "name": "IsActiveEntity",
+          "required": true,
+          "schema": {
+            "type": "boolean",
+            "default": true
           }
         }
       ],
@@ -3778,7 +5328,7 @@
         }
       }
     },
-    "/Orders({ID})/status": {
+    "/Orders(ID={ID},IsActiveEntity='{IsActiveEntity}')/status": {
       "parameters": [
         {
           "description": "key: ID",
@@ -3789,6 +5339,16 @@
             "type": "string",
             "format": "uuid",
             "example": "01234567-89ab-cdef-0123-456789abcdef"
+          }
+        },
+        {
+          "description": "key: IsActiveEntity",
+          "in": "path",
+          "name": "IsActiveEntity",
+          "required": true,
+          "schema": {
+            "type": "boolean",
+            "default": true
           }
         }
       ],
@@ -3853,7 +5413,7 @@
         }
       }
     },
-    "/Orders({ID})/vendor": {
+    "/Orders(ID={ID},IsActiveEntity='{IsActiveEntity}')/vendor": {
       "parameters": [
         {
           "description": "key: ID",
@@ -3864,6 +5424,16 @@
             "type": "string",
             "format": "uuid",
             "example": "01234567-89ab-cdef-0123-456789abcdef"
+          }
+        },
+        {
+          "description": "key: IsActiveEntity",
+          "in": "path",
+          "name": "IsActiveEntity",
+          "required": true,
+          "schema": {
+            "type": "boolean",
+            "default": true
           }
         }
       ],
@@ -5711,6 +7281,34 @@
             "type": "boolean",
             "nullable": true,
             "default": false
+          },
+          "IsActiveEntity": {
+            "type": "boolean",
+            "default": true
+          },
+          "HasActiveEntity": {
+            "type": "boolean",
+            "default": false
+          },
+          "HasDraftEntity": {
+            "type": "boolean",
+            "default": false
+          },
+          "DraftAdministrativeData": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AdminService.DraftAdministrativeData"
+              }
+            ],
+            "nullable": true
+          },
+          "SiblingEntity": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AdminService.Accounts"
+              }
+            ],
+            "nullable": true
           }
         }
       },
@@ -5763,9 +7361,30 @@
             "type": "string",
             "maxLength": 16,
             "nullable": true
+          },
+          "IsActiveEntity": {
+            "type": "boolean",
+            "default": true
+          },
+          "HasActiveEntity": {
+            "type": "boolean",
+            "default": false
+          },
+          "HasDraftEntity": {
+            "type": "boolean",
+            "default": false
+          },
+          "DraftAdministrativeData": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AdminService.DraftAdministrativeData-create"
+              }
+            ],
+            "nullable": true
           }
         },
         "required": [
+          "IsActiveEntity",
           "parent_ID",
           "GLAccountNo"
         ]
@@ -5813,6 +7432,22 @@
           "functionalArea": {
             "type": "string",
             "maxLength": 16,
+            "nullable": true
+          },
+          "HasActiveEntity": {
+            "type": "boolean",
+            "default": false
+          },
+          "HasDraftEntity": {
+            "type": "boolean",
+            "default": false
+          },
+          "DraftAdministrativeData": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AdminService.DraftAdministrativeData-create"
+              }
+            ],
             "nullable": true
           }
         }
@@ -5888,6 +7523,34 @@
             "type": "string",
             "format": "base64url",
             "nullable": true
+          },
+          "IsActiveEntity": {
+            "type": "boolean",
+            "default": true
+          },
+          "HasActiveEntity": {
+            "type": "boolean",
+            "default": false
+          },
+          "HasDraftEntity": {
+            "type": "boolean",
+            "default": false
+          },
+          "DraftAdministrativeData": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AdminService.DraftAdministrativeData"
+              }
+            ],
+            "nullable": true
+          },
+          "SiblingEntity": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AdminService.Attachments"
+              }
+            ],
+            "nullable": true
           }
         }
       },
@@ -5924,9 +7587,30 @@
             "type": "string",
             "format": "base64url",
             "nullable": true
+          },
+          "IsActiveEntity": {
+            "type": "boolean",
+            "default": true
+          },
+          "HasActiveEntity": {
+            "type": "boolean",
+            "default": false
+          },
+          "HasDraftEntity": {
+            "type": "boolean",
+            "default": false
+          },
+          "DraftAdministrativeData": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AdminService.DraftAdministrativeData-create"
+              }
+            ],
+            "nullable": true
           }
         },
         "required": [
+          "IsActiveEntity",
           "fileName",
           "fileType"
         ]
@@ -5958,6 +7642,22 @@
           "data": {
             "type": "string",
             "format": "base64url",
+            "nullable": true
+          },
+          "HasActiveEntity": {
+            "type": "boolean",
+            "default": false
+          },
+          "HasDraftEntity": {
+            "type": "boolean",
+            "default": false
+          },
+          "DraftAdministrativeData": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AdminService.DraftAdministrativeData-create"
+              }
+            ],
             "nullable": true
           }
         }
@@ -6181,6 +7881,139 @@
           }
         }
       },
+      "AdminService.DraftAdministrativeData": {
+        "title": "DraftAdministrativeData",
+        "type": "object",
+        "properties": {
+          "DraftUUID": {
+            "type": "string",
+            "format": "uuid",
+            "example": "01234567-89ab-cdef-0123-456789abcdef"
+          },
+          "CreationDateTime": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2017-04-13T15:51:04.0000000Z",
+            "nullable": true
+          },
+          "CreatedByUser": {
+            "type": "string",
+            "maxLength": 256,
+            "nullable": true
+          },
+          "DraftIsCreatedByMe": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "LastChangeDateTime": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2017-04-13T15:51:04.0000000Z",
+            "nullable": true
+          },
+          "LastChangedByUser": {
+            "type": "string",
+            "maxLength": 256,
+            "nullable": true
+          },
+          "InProcessByUser": {
+            "type": "string",
+            "maxLength": 256,
+            "nullable": true
+          },
+          "DraftIsProcessedByMe": {
+            "type": "boolean",
+            "nullable": true
+          }
+        }
+      },
+      "AdminService.DraftAdministrativeData-create": {
+        "title": "DraftAdministrativeData (for create)",
+        "type": "object",
+        "properties": {
+          "DraftUUID": {
+            "type": "string",
+            "format": "uuid",
+            "example": "01234567-89ab-cdef-0123-456789abcdef"
+          },
+          "CreationDateTime": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2017-04-13T15:51:04.0000000Z",
+            "nullable": true
+          },
+          "CreatedByUser": {
+            "type": "string",
+            "maxLength": 256,
+            "nullable": true
+          },
+          "DraftIsCreatedByMe": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "LastChangeDateTime": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2017-04-13T15:51:04.0000000Z",
+            "nullable": true
+          },
+          "LastChangedByUser": {
+            "type": "string",
+            "maxLength": 256,
+            "nullable": true
+          },
+          "InProcessByUser": {
+            "type": "string",
+            "maxLength": 256,
+            "nullable": true
+          },
+          "DraftIsProcessedByMe": {
+            "type": "boolean",
+            "nullable": true
+          }
+        }
+      },
+      "AdminService.DraftAdministrativeData-update": {
+        "title": "DraftAdministrativeData (for update)",
+        "type": "object",
+        "properties": {
+          "CreationDateTime": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2017-04-13T15:51:04.0000000Z",
+            "nullable": true
+          },
+          "CreatedByUser": {
+            "type": "string",
+            "maxLength": 256,
+            "nullable": true
+          },
+          "DraftIsCreatedByMe": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "LastChangeDateTime": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2017-04-13T15:51:04.0000000Z",
+            "nullable": true
+          },
+          "LastChangedByUser": {
+            "type": "string",
+            "maxLength": 256,
+            "nullable": true
+          },
+          "InProcessByUser": {
+            "type": "string",
+            "maxLength": 256,
+            "nullable": true
+          },
+          "DraftIsProcessedByMe": {
+            "type": "boolean",
+            "nullable": true
+          }
+        }
+      },
       "AdminService.OrderItems": {
         "title": "Aspect to capture changes by user and name\n\nSee https://cap.cloud.sap/docs/cds/common#aspect-managed",
         "type": "object",
@@ -6363,6 +8196,34 @@
           },
           "attachments@count": {
             "$ref": "#/components/schemas/count"
+          },
+          "IsActiveEntity": {
+            "type": "boolean",
+            "default": true
+          },
+          "HasActiveEntity": {
+            "type": "boolean",
+            "default": false
+          },
+          "HasDraftEntity": {
+            "type": "boolean",
+            "default": false
+          },
+          "DraftAdministrativeData": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AdminService.DraftAdministrativeData"
+              }
+            ],
+            "nullable": true
+          },
+          "SiblingEntity": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AdminService.OrderItems"
+              }
+            ],
+            "nullable": true
           }
         }
       },
@@ -6486,9 +8347,30 @@
             "items": {
               "$ref": "#/components/schemas/AdminService.Attachments-create"
             }
+          },
+          "IsActiveEntity": {
+            "type": "boolean",
+            "default": true
+          },
+          "HasActiveEntity": {
+            "type": "boolean",
+            "default": false
+          },
+          "HasDraftEntity": {
+            "type": "boolean",
+            "default": false
+          },
+          "DraftAdministrativeData": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AdminService.DraftAdministrativeData-create"
+              }
+            ],
+            "nullable": true
           }
         },
         "required": [
+          "IsActiveEntity",
           "parent_ID",
           "materialDescr",
           "stock",
@@ -6611,6 +8493,22 @@
             "items": {
               "$ref": "#/components/schemas/AdminService.Attachments-create"
             }
+          },
+          "HasActiveEntity": {
+            "type": "boolean",
+            "default": false
+          },
+          "HasDraftEntity": {
+            "type": "boolean",
+            "default": false
+          },
+          "DraftAdministrativeData": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AdminService.DraftAdministrativeData-create"
+              }
+            ],
+            "nullable": true
           }
         }
       },
@@ -6788,6 +8686,7 @@
           },
           "isEditable": {
             "type": "boolean",
+            "nullable": true,
             "default": true
           },
           "attachments": {
@@ -6798,6 +8697,34 @@
           },
           "attachments@count": {
             "$ref": "#/components/schemas/count"
+          },
+          "IsActiveEntity": {
+            "type": "boolean",
+            "default": true
+          },
+          "HasActiveEntity": {
+            "type": "boolean",
+            "default": false
+          },
+          "HasDraftEntity": {
+            "type": "boolean",
+            "default": false
+          },
+          "DraftAdministrativeData": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AdminService.DraftAdministrativeData"
+              }
+            ],
+            "nullable": true
+          },
+          "SiblingEntity": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AdminService.Orders"
+              }
+            ],
+            "nullable": true
           }
         }
       },
@@ -6894,9 +8821,30 @@
             "items": {
               "$ref": "#/components/schemas/AdminService.Attachments-create"
             }
+          },
+          "IsActiveEntity": {
+            "type": "boolean",
+            "default": true
+          },
+          "HasActiveEntity": {
+            "type": "boolean",
+            "default": false
+          },
+          "HasDraftEntity": {
+            "type": "boolean",
+            "default": false
+          },
+          "DraftAdministrativeData": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AdminService.DraftAdministrativeData-create"
+              }
+            ],
+            "nullable": true
           }
         },
         "required": [
+          "IsActiveEntity",
           "vendor_vendor",
           "purchOrg_purchOrg",
           "purchGroup_purchGroup",
@@ -6992,6 +8940,22 @@
             "items": {
               "$ref": "#/components/schemas/AdminService.Attachments-create"
             }
+          },
+          "HasActiveEntity": {
+            "type": "boolean",
+            "default": false
+          },
+          "HasDraftEntity": {
+            "type": "boolean",
+            "default": false
+          },
+          "DraftAdministrativeData": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AdminService.DraftAdministrativeData-create"
+              }
+            ],
+            "nullable": true
           }
         }
       },

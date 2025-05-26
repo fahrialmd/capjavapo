@@ -2,8 +2,11 @@ using {com.hand.cap.capjavapo as po} from '../db/index';
 
 @path: 'admin'
 service AdminService {
-  entity Orders      as projection on po.Orders;
-  entity OrderItems  as projection on po.OrderItems;
-  entity Accounts    as projection on po.Accounts;
-  entity Attachments as projection on po.Attachments;
+  @odata.draft.enabled
+  entity Orders             as projection on po.Orders;
+
+  entity Vendors            as projection on po.Vendors;
+  entity PurchasingGroups   as projection on po.PurchasingGroups;
+  entity PurchOrganizations as projection on po.PurchOrganizations;
+  entity Companies          as projection on po.Companies;
 }

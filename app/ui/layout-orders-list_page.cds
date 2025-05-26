@@ -1,14 +1,16 @@
 using from '../../srv/admin-service.cds';
 
+
 annotate AdminService.Orders with @(
+
     // Header Information
-    UI.HeaderInfo     : {
+    UI.HeaderInfo         : {
         TypeName      : '{i18n>Order}',
         TypeNamePlural: '{i18n>Orders}'
     },
 
     // Selection Fields (Filter Bar)
-    UI.SelectionFields: [
+    UI.SelectionFields    : [
         orderNo,
         vendor_vendor,
         purchOrg_purchOrg,
@@ -18,142 +20,61 @@ annotate AdminService.Orders with @(
     ],
 
     // Line Item (List Columns)
-    UI.LineItem       : [
+    UI.LineItem           : [
         {
+            $Type: 'UI.DataField',
+            Value: ID,
+        },
+        {
+            $Type: 'UI.DataField',
             Value: orderNo,
             Label: '{i18n>OrderNumber}'
         },
         {
+            $Type: 'UI.DataField',
             Value: vendor_vendor,
             Label: '{i18n>Vendor}'
         },
         {
+            $Type: 'UI.DataField',
             Value: purchOrg_purchOrg,
             Label: '{i18n>PurchasingOrganization}'
         },
         {
+            $Type: 'UI.DataField',
             Value: purchGroup_purchGroup,
             Label: '{i18n>PurchasingGroup}'
         },
         {
+            $Type: 'UI.DataField',
             Value: companyCode_companyCode,
             Label: '{i18n>CompanyCode}'
         },
         {
+            $Type: 'UI.DataField',
             Value: totalNetPrice,
             Label: '{i18n>TotalNetPrice}'
         },
         {
+            $Type: 'UI.DataField',
             Value: currency_code,
             Label: '{i18n>Currency}'
         },
         {
+            $Type: 'UI.DataField',
             Value: text,
             Label: '{i18n>Description}'
         }
-    ]
+    ],
+    UI.PresentationVariant: {
+        Text          : 'Default',
+        SortOrder     : [{
+            $Type     : 'Common.SortOrderType',
+            Property  : vendor_vendor,
+            Descending: false
+        }],
+        GroupBy       : [currency_code],
+        Total         : [totalNetPrice],
+        Visualizations: ['@UI.LineItem'],
+    },
 );
-
-//=======================
-// Field-Level Annotations (for Value Help)
-//=======================
-
-annotate AdminService.Orders with {
-    // Order Number
-    orderNo       @title: '{i18n>OrderNumber}';
-
-    // Vendor with Value Help
-    vendor        @(
-        title                 : '{i18n>Vendor}',
-        Common.Text           : vendor.vendor,
-        Common.TextArrangement: #TextFirst,
-        Common.ValueList      : {
-            CollectionPath: 'Vendors',
-            Parameters    : [
-                {
-                    $Type            : 'Common.ValueListParameterInOut',
-                    LocalDataProperty: vendor_vendor,
-                    ValueListProperty: 'vendor'
-                },
-                {
-                    $Type            : 'Common.ValueListParameterDisplayOnly',
-                    ValueListProperty: 'name'
-                }
-            ]
-        }
-    );
-
-    // Purchasing Organization with Value Help
-    purchOrg      @(
-        title                 : '{i18n>PurchasingOrganization}',
-        Common.Text           : purchOrg.purchOrg,
-        Common.TextArrangement: #TextFirst,
-        Common.ValueList      : {
-            CollectionPath: 'PurchOrganizations',
-            Parameters    : [
-                {
-                    $Type            : 'Common.ValueListParameterInOut',
-                    LocalDataProperty: purchOrg_purchOrg,
-                    ValueListProperty: 'purchOrg'
-                },
-                {
-                    $Type            : 'Common.ValueListParameterDisplayOnly',
-                    ValueListProperty: 'name'
-                }
-            ]
-        }
-    );
-
-    // Purchasing Group with Value Help
-    purchGroup    @(
-        title                 : '{i18n>PurchasingGroup}',
-        Common.Text           : purchGroup.purchGroup,
-        Common.TextArrangement: #TextFirst,
-        Common.ValueList      : {
-            CollectionPath: 'PurchasingGroups',
-            Parameters    : [
-                {
-                    $Type            : 'Common.ValueListParameterInOut',
-                    LocalDataProperty: purchGroup_purchGroup,
-                    ValueListProperty: 'purchGroup'
-                },
-                {
-                    $Type            : 'Common.ValueListParameterDisplayOnly',
-                    ValueListProperty: 'name'
-                }
-            ]
-        }
-    );
-
-    // Company Code with Value Help
-    companyCode   @(
-        title                 : '{i18n>CompanyCode}',
-        Common.Text           : companyCode.companyCode,
-        Common.TextArrangement: #TextFirst,
-        Common.ValueList      : {
-            CollectionPath: 'Companies',
-            Parameters    : [
-                {
-                    $Type            : 'Common.ValueListParameterInOut',
-                    LocalDataProperty: companyCode_companyCode,
-                    ValueListProperty: 'companyCode'
-                },
-                {
-                    $Type            : 'Common.ValueListParameterDisplayOnly',
-                    ValueListProperty: 'name'
-                }
-            ]
-        }
-    );
-
-    // Currency
-    currency      @(
-        title                 : '{i18n>Currency}',
-        Common.Text           : currency.name,
-        Common.TextArrangement: #TextFirst
-    );
-
-    // Other fields
-    text          @title: '{i18n>Description}';
-    totalNetPrice @title: '{i18n>TotalNetPrice}';
-}
