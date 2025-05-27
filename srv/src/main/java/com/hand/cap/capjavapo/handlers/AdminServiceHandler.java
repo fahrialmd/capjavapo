@@ -33,6 +33,10 @@ public class AdminServiceHandler implements EventHandler {
     // @After(event = CqnService.EVENT_READ, entity = "AdminService.Orders")
     // public void calcNetValue(CdsReadEventContext context) {
     // context.getResult().listOf(Orders.class).forEach(order -> {
+<<<<<<< HEAD
+=======
+
+>>>>>>> 3158ab307757a2ad68e072a5340c2e76b84879e7
     // // Get total net price for this order
     // Result result = db.run(
     // Select.from(AdminService_.ORDER_ITEMS)
@@ -42,14 +46,25 @@ public class AdminServiceHandler implements EventHandler {
     // oi -> oi.stock().sum().as("totalStock"))
     // .where(oi -> oi.parent_ID().eq(order.getOrderNo()))
     // .groupBy(oi -> oi.parent_ID()));
+<<<<<<< HEAD
+=======
+
+>>>>>>> 3158ab307757a2ad68e072a5340c2e76b84879e7
     // if (!result.list().isEmpty()) {
     // BigDecimal totalNetPrice = (BigDecimal) result.single().get("totalNetPrice");
     // order.setTotalNetPrice(totalNetPrice);
     // BigDecimal totalStock = (BigDecimal) result.single().get("totalStock");
     // order.setTotalStock(totalStock);
     // }
+<<<<<<< HEAD
     // });
     // };
+=======
+
+    // });
+    // };
+
+>>>>>>> 3158ab307757a2ad68e072a5340c2e76b84879e7
     @After(event = CqnService.EVENT_READ, entity = "AdminService.Orders")
     public void testHandler(CdsReadEventContext context) {
         // Single query - get ALL order totals
@@ -67,6 +82,22 @@ public class AdminServiceHandler implements EventHandler {
             String parentId = (String) row.get("parent_ID");
             totalsMap.put(parentId, row);
         });
+<<<<<<< HEAD
     }
 ;
+=======
+<<<<<<< HEAD
+=======
+
+        // Loop through orders and assign values
+        context.getResult().listOf(Orders.class).forEach(order -> {
+            Map<String, Object> orderTotals = totalsMap.get(order.getOrderNo());
+            if (orderTotals != null) {
+                order.setTotalNetPrice((BigDecimal) orderTotals.get("totalNetPrice"));
+                order.setTotalStock((BigDecimal) orderTotals.get("totalStock"));
+            }
+        });
+>>>>>>> 48348d68047ee1dddd0ee305790d0c73d3a48d19
+    };
+>>>>>>> 3158ab307757a2ad68e072a5340c2e76b84879e7
 }
