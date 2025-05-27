@@ -3,12 +3,6 @@ using from '../../srv/admin-service.cds';
 
 annotate AdminService.Orders with @(
 
-    // Header Information
-    UI.HeaderInfo         : {
-        TypeName      : '{i18n>Order}',
-        TypeNamePlural: '{i18n>Orders}'
-    },
-
     // Selection Fields (Filter Bar)
     UI.SelectionFields    : [
         orderNo,
@@ -47,12 +41,12 @@ annotate AdminService.Orders with @(
         {
             $Type                : 'UI.DataField',
             Value                : totalStock,
-            ![@HTML5.CssDefaults]: {width: '6rem'}
+            ![@HTML5.CssDefaults]: {width: '10rem'}
         },
         {
             $Type                : 'UI.DataField',
             Value                : totalNetPrice,
-            ![@HTML5.CssDefaults]: {width: '8rem'}
+            ![@HTML5.CssDefaults]: {width: '10rem'}
         },
         {
             $Type                : 'UI.DataField',
