@@ -3,12 +3,12 @@
 	"sap.app": {
 		"id": "orders",
 		"type": "application",
-		"i18n": "i18n/i18n.properties",
+		"i18n": "./i18n/i18n.properties",
 		"applicationVersion": {
 			"version": "0.0.1"
 		},
-		"title": "{i18n>appTitle}",
-		"description": "{i18n>appDescription}",
+		"title": "Manage PO",
+		"description": "Manage Purchase Orders",
 		"resources": "resources.json",
 		"dataSources": {
 			"mainService": {

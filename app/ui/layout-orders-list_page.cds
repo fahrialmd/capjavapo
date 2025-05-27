@@ -41,12 +41,12 @@ annotate AdminService.Orders with @(
         {
             $Type                : 'UI.DataField',
             Value                : totalStock,
-            ![@HTML5.CssDefaults]: {width: '10rem'}
+            ![@HTML5.CssDefaults]: {width: '8rem'}
         },
         {
             $Type                : 'UI.DataField',
             Value                : totalNetPrice,
-            ![@HTML5.CssDefaults]: {width: '10rem'}
+            ![@HTML5.CssDefaults]: {width: '12rem'}
         },
         {
             $Type                : 'UI.DataField',
