@@ -50,11 +50,11 @@
       "name": "PurchOrganizations"
     },
     {
-      "name": "status",
+      "name": "Status",
       "description": "Aspect for a code list with name and description\n\nSee https://cap.cloud.sap/docs/cds/common#aspect-codelist"
     },
     {
-      "name": "status_texts"
+      "name": "Status_texts"
     },
     {
       "name": "StorageLocations"
@@ -5356,7 +5356,7 @@
         "summary": "Retrieves status of a order.",
         "tags": [
           "Orders",
-          "status"
+          "Status"
         ],
         "parameters": [
           {
@@ -5402,7 +5402,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AdminService.status"
+                  "$ref": "#/components/schemas/AdminService.Status"
                 }
               }
             }
@@ -6022,6 +6022,730 @@
         }
       }
     },
+    "/Status": {
+      "get": {
+        "summary": "Retrieves a list of status.",
+        "tags": [
+          "Status"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/top"
+          },
+          {
+            "$ref": "#/components/parameters/skip"
+          },
+          {
+            "$ref": "#/components/parameters/search"
+          },
+          {
+            "name": "$filter",
+            "description": "Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/count"
+          },
+          {
+            "name": "$orderby",
+            "description": "Order items by property values, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)",
+            "in": "query",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "name",
+                  "name desc",
+                  "descr",
+                  "descr desc",
+                  "code",
+                  "code desc"
+                ]
+              }
+            }
+          },
+          {
+            "name": "$select",
+            "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+            "in": "query",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "name",
+                  "descr",
+                  "code"
+                ]
+              }
+            }
+          },
+          {
+            "name": "$expand",
+            "description": "The value of $expand query option is a comma-separated list of navigation property names, stream property names, or $value indicating the stream content of a media-entity. The corresponding related entities and stream values will be represented inline, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+            "in": "query",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "*",
+                  "texts",
+                  "localized"
+                ]
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retrieved status",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Collection of Status",
+                  "properties": {
+                    "@count": {
+                      "$ref": "#/components/schemas/count"
+                    },
+                    "value": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/AdminService.Status"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      },
+      "post": {
+        "summary": "Creates a single status.",
+        "tags": [
+          "Status"
+        ],
+        "requestBody": {
+          "description": "Aspect for a code list with name and description\n\nSee https://cap.cloud.sap/docs/cds/common#aspect-codelist",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdminService.Status-create"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created status",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminService.Status"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    },
+    "/Status('{code}')": {
+      "parameters": [
+        {
+          "description": "key: code",
+          "in": "path",
+          "name": "code",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "maxLength": 1,
+            "enum": [
+              "N",
+              "S",
+              "Y",
+              "X"
+            ],
+            "default": "N"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Retrieves a single status.",
+        "tags": [
+          "Status"
+        ],
+        "parameters": [
+          {
+            "name": "$select",
+            "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+            "in": "query",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "name",
+                  "descr",
+                  "code"
+                ]
+              }
+            }
+          },
+          {
+            "name": "$expand",
+            "description": "The value of $expand query option is a comma-separated list of navigation property names, stream property names, or $value indicating the stream content of a media-entity. The corresponding related entities and stream values will be represented inline, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+            "in": "query",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "*",
+                  "texts",
+                  "localized"
+                ]
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retrieved status",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminService.Status"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Changes a single status.",
+        "tags": [
+          "Status"
+        ],
+        "requestBody": {
+          "description": "Aspect for a code list with name and description\n\nSee https://cap.cloud.sap/docs/cds/common#aspect-codelist",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdminService.Status-update"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "4XX": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Deletes a single status.",
+        "tags": [
+          "Status"
+        ],
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "4XX": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    },
+    "/Status('{code}')/localized": {
+      "parameters": [
+        {
+          "description": "key: code",
+          "in": "path",
+          "name": "code",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "maxLength": 1,
+            "enum": [
+              "N",
+              "S",
+              "Y",
+              "X"
+            ],
+            "default": "N"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Retrieves localized of a status.",
+        "tags": [
+          "Status",
+          "Status_texts"
+        ],
+        "parameters": [
+          {
+            "name": "$select",
+            "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+            "in": "query",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "locale",
+                  "name",
+                  "descr",
+                  "code"
+                ]
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retrieved localized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminService.Status_texts"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    },
+    "/Status('{code}')/texts": {
+      "parameters": [
+        {
+          "description": "key: code",
+          "in": "path",
+          "name": "code",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "maxLength": 1,
+            "enum": [
+              "N",
+              "S",
+              "Y",
+              "X"
+            ],
+            "default": "N"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Retrieves a list of texts of a status.",
+        "tags": [
+          "Status",
+          "Status_texts"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/top"
+          },
+          {
+            "$ref": "#/components/parameters/skip"
+          },
+          {
+            "$ref": "#/components/parameters/search"
+          },
+          {
+            "name": "$filter",
+            "description": "Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/count"
+          },
+          {
+            "name": "$orderby",
+            "description": "Order items by property values, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)",
+            "in": "query",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "locale",
+                  "locale desc",
+                  "name",
+                  "name desc",
+                  "descr",
+                  "descr desc",
+                  "code",
+                  "code desc"
+                ]
+              }
+            }
+          },
+          {
+            "name": "$select",
+            "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+            "in": "query",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "locale",
+                  "name",
+                  "descr",
+                  "code"
+                ]
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retrieved texts",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Collection of Status_texts",
+                  "properties": {
+                    "@count": {
+                      "$ref": "#/components/schemas/count"
+                    },
+                    "value": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/AdminService.Status_texts"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      },
+      "post": {
+        "summary": "Creates a single text of a status.",
+        "tags": [
+          "Status",
+          "Status_texts"
+        ],
+        "requestBody": {
+          "description": "New text",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdminService.Status_texts-create"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created text",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminService.Status_texts"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    },
+    "/Status_texts": {
+      "get": {
+        "summary": "Retrieves a list of status_texts.",
+        "tags": [
+          "Status_texts"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/top"
+          },
+          {
+            "$ref": "#/components/parameters/skip"
+          },
+          {
+            "$ref": "#/components/parameters/search"
+          },
+          {
+            "name": "$filter",
+            "description": "Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/count"
+          },
+          {
+            "name": "$orderby",
+            "description": "Order items by property values, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)",
+            "in": "query",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "locale",
+                  "locale desc",
+                  "name",
+                  "name desc",
+                  "descr",
+                  "descr desc",
+                  "code",
+                  "code desc"
+                ]
+              }
+            }
+          },
+          {
+            "name": "$select",
+            "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+            "in": "query",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "locale",
+                  "name",
+                  "descr",
+                  "code"
+                ]
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retrieved status_texts",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Collection of Status_texts",
+                  "properties": {
+                    "@count": {
+                      "$ref": "#/components/schemas/count"
+                    },
+                    "value": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/AdminService.Status_texts"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      },
+      "post": {
+        "summary": "Creates a single status_text.",
+        "tags": [
+          "Status_texts"
+        ],
+        "requestBody": {
+          "description": "New status_text",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdminService.Status_texts-create"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created status_text",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminService.Status_texts"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    },
+    "/Status_texts(locale='{locale}',code='{code}')": {
+      "parameters": [
+        {
+          "description": "Type for a language code",
+          "in": "path",
+          "name": "locale",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "maxLength": 14
+          }
+        },
+        {
+          "description": "key: code",
+          "in": "path",
+          "name": "code",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "maxLength": 1,
+            "enum": [
+              "N",
+              "S",
+              "Y",
+              "X"
+            ],
+            "default": "N"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Retrieves a single status_text.",
+        "tags": [
+          "Status_texts"
+        ],
+        "parameters": [
+          {
+            "name": "$select",
+            "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+            "in": "query",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "locale",
+                  "name",
+                  "descr",
+                  "code"
+                ]
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retrieved status_text",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminService.Status_texts"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Changes a single status_text.",
+        "tags": [
+          "Status_texts"
+        ],
+        "requestBody": {
+          "description": "New property values",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdminService.Status_texts-update"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "4XX": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Deletes a single status_text.",
+        "tags": [
+          "Status_texts"
+        ],
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "4XX": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    },
     "/StorageLocations": {
       "get": {
         "summary": "Retrieves a list of storage locations.",
@@ -6463,730 +7187,6 @@
                 }
               }
             }
-          },
-          "4XX": {
-            "$ref": "#/components/responses/error"
-          }
-        }
-      }
-    },
-    "/status": {
-      "get": {
-        "summary": "Retrieves a list of status.",
-        "tags": [
-          "status"
-        ],
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/top"
-          },
-          {
-            "$ref": "#/components/parameters/skip"
-          },
-          {
-            "$ref": "#/components/parameters/search"
-          },
-          {
-            "name": "$filter",
-            "description": "Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "$ref": "#/components/parameters/count"
-          },
-          {
-            "name": "$orderby",
-            "description": "Order items by property values, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)",
-            "in": "query",
-            "explode": false,
-            "schema": {
-              "type": "array",
-              "uniqueItems": true,
-              "items": {
-                "type": "string",
-                "enum": [
-                  "name",
-                  "name desc",
-                  "descr",
-                  "descr desc",
-                  "code",
-                  "code desc"
-                ]
-              }
-            }
-          },
-          {
-            "name": "$select",
-            "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
-            "in": "query",
-            "explode": false,
-            "schema": {
-              "type": "array",
-              "uniqueItems": true,
-              "items": {
-                "type": "string",
-                "enum": [
-                  "name",
-                  "descr",
-                  "code"
-                ]
-              }
-            }
-          },
-          {
-            "name": "$expand",
-            "description": "The value of $expand query option is a comma-separated list of navigation property names, stream property names, or $value indicating the stream content of a media-entity. The corresponding related entities and stream values will be represented inline, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
-            "in": "query",
-            "explode": false,
-            "schema": {
-              "type": "array",
-              "uniqueItems": true,
-              "items": {
-                "type": "string",
-                "enum": [
-                  "*",
-                  "texts",
-                  "localized"
-                ]
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Retrieved status",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "title": "Collection of status",
-                  "properties": {
-                    "@count": {
-                      "$ref": "#/components/schemas/count"
-                    },
-                    "value": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/AdminService.status"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "4XX": {
-            "$ref": "#/components/responses/error"
-          }
-        }
-      },
-      "post": {
-        "summary": "Creates a single status.",
-        "tags": [
-          "status"
-        ],
-        "requestBody": {
-          "description": "Aspect for a code list with name and description\n\nSee https://cap.cloud.sap/docs/cds/common#aspect-codelist",
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AdminService.status-create"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Created status",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AdminService.status"
-                }
-              }
-            }
-          },
-          "4XX": {
-            "$ref": "#/components/responses/error"
-          }
-        }
-      }
-    },
-    "/status('{code}')": {
-      "parameters": [
-        {
-          "description": "key: code",
-          "in": "path",
-          "name": "code",
-          "required": true,
-          "schema": {
-            "type": "string",
-            "maxLength": 1,
-            "enum": [
-              "N",
-              "S",
-              "Y",
-              "X"
-            ],
-            "default": "New"
-          }
-        }
-      ],
-      "get": {
-        "summary": "Retrieves a single status.",
-        "tags": [
-          "status"
-        ],
-        "parameters": [
-          {
-            "name": "$select",
-            "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
-            "in": "query",
-            "explode": false,
-            "schema": {
-              "type": "array",
-              "uniqueItems": true,
-              "items": {
-                "type": "string",
-                "enum": [
-                  "name",
-                  "descr",
-                  "code"
-                ]
-              }
-            }
-          },
-          {
-            "name": "$expand",
-            "description": "The value of $expand query option is a comma-separated list of navigation property names, stream property names, or $value indicating the stream content of a media-entity. The corresponding related entities and stream values will be represented inline, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
-            "in": "query",
-            "explode": false,
-            "schema": {
-              "type": "array",
-              "uniqueItems": true,
-              "items": {
-                "type": "string",
-                "enum": [
-                  "*",
-                  "texts",
-                  "localized"
-                ]
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Retrieved status",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AdminService.status"
-                }
-              }
-            }
-          },
-          "4XX": {
-            "$ref": "#/components/responses/error"
-          }
-        }
-      },
-      "patch": {
-        "summary": "Changes a single status.",
-        "tags": [
-          "status"
-        ],
-        "requestBody": {
-          "description": "Aspect for a code list with name and description\n\nSee https://cap.cloud.sap/docs/cds/common#aspect-codelist",
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AdminService.status-update"
-              }
-            }
-          }
-        },
-        "responses": {
-          "204": {
-            "description": "Success"
-          },
-          "4XX": {
-            "$ref": "#/components/responses/error"
-          }
-        }
-      },
-      "delete": {
-        "summary": "Deletes a single status.",
-        "tags": [
-          "status"
-        ],
-        "responses": {
-          "204": {
-            "description": "Success"
-          },
-          "4XX": {
-            "$ref": "#/components/responses/error"
-          }
-        }
-      }
-    },
-    "/status('{code}')/localized": {
-      "parameters": [
-        {
-          "description": "key: code",
-          "in": "path",
-          "name": "code",
-          "required": true,
-          "schema": {
-            "type": "string",
-            "maxLength": 1,
-            "enum": [
-              "N",
-              "S",
-              "Y",
-              "X"
-            ],
-            "default": "New"
-          }
-        }
-      ],
-      "get": {
-        "summary": "Retrieves localized of a status.",
-        "tags": [
-          "status",
-          "status_texts"
-        ],
-        "parameters": [
-          {
-            "name": "$select",
-            "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
-            "in": "query",
-            "explode": false,
-            "schema": {
-              "type": "array",
-              "uniqueItems": true,
-              "items": {
-                "type": "string",
-                "enum": [
-                  "locale",
-                  "name",
-                  "descr",
-                  "code"
-                ]
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Retrieved localized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AdminService.status_texts"
-                }
-              }
-            }
-          },
-          "4XX": {
-            "$ref": "#/components/responses/error"
-          }
-        }
-      }
-    },
-    "/status('{code}')/texts": {
-      "parameters": [
-        {
-          "description": "key: code",
-          "in": "path",
-          "name": "code",
-          "required": true,
-          "schema": {
-            "type": "string",
-            "maxLength": 1,
-            "enum": [
-              "N",
-              "S",
-              "Y",
-              "X"
-            ],
-            "default": "New"
-          }
-        }
-      ],
-      "get": {
-        "summary": "Retrieves a list of texts of a status.",
-        "tags": [
-          "status",
-          "status_texts"
-        ],
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/top"
-          },
-          {
-            "$ref": "#/components/parameters/skip"
-          },
-          {
-            "$ref": "#/components/parameters/search"
-          },
-          {
-            "name": "$filter",
-            "description": "Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "$ref": "#/components/parameters/count"
-          },
-          {
-            "name": "$orderby",
-            "description": "Order items by property values, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)",
-            "in": "query",
-            "explode": false,
-            "schema": {
-              "type": "array",
-              "uniqueItems": true,
-              "items": {
-                "type": "string",
-                "enum": [
-                  "locale",
-                  "locale desc",
-                  "name",
-                  "name desc",
-                  "descr",
-                  "descr desc",
-                  "code",
-                  "code desc"
-                ]
-              }
-            }
-          },
-          {
-            "name": "$select",
-            "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
-            "in": "query",
-            "explode": false,
-            "schema": {
-              "type": "array",
-              "uniqueItems": true,
-              "items": {
-                "type": "string",
-                "enum": [
-                  "locale",
-                  "name",
-                  "descr",
-                  "code"
-                ]
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Retrieved texts",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "title": "Collection of status_texts",
-                  "properties": {
-                    "@count": {
-                      "$ref": "#/components/schemas/count"
-                    },
-                    "value": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/AdminService.status_texts"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "4XX": {
-            "$ref": "#/components/responses/error"
-          }
-        }
-      },
-      "post": {
-        "summary": "Creates a single text of a status.",
-        "tags": [
-          "status",
-          "status_texts"
-        ],
-        "requestBody": {
-          "description": "New text",
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AdminService.status_texts-create"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Created text",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AdminService.status_texts"
-                }
-              }
-            }
-          },
-          "4XX": {
-            "$ref": "#/components/responses/error"
-          }
-        }
-      }
-    },
-    "/status_texts": {
-      "get": {
-        "summary": "Retrieves a list of status_texts.",
-        "tags": [
-          "status_texts"
-        ],
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/top"
-          },
-          {
-            "$ref": "#/components/parameters/skip"
-          },
-          {
-            "$ref": "#/components/parameters/search"
-          },
-          {
-            "name": "$filter",
-            "description": "Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "$ref": "#/components/parameters/count"
-          },
-          {
-            "name": "$orderby",
-            "description": "Order items by property values, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)",
-            "in": "query",
-            "explode": false,
-            "schema": {
-              "type": "array",
-              "uniqueItems": true,
-              "items": {
-                "type": "string",
-                "enum": [
-                  "locale",
-                  "locale desc",
-                  "name",
-                  "name desc",
-                  "descr",
-                  "descr desc",
-                  "code",
-                  "code desc"
-                ]
-              }
-            }
-          },
-          {
-            "name": "$select",
-            "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
-            "in": "query",
-            "explode": false,
-            "schema": {
-              "type": "array",
-              "uniqueItems": true,
-              "items": {
-                "type": "string",
-                "enum": [
-                  "locale",
-                  "name",
-                  "descr",
-                  "code"
-                ]
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Retrieved status_texts",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "title": "Collection of status_texts",
-                  "properties": {
-                    "@count": {
-                      "$ref": "#/components/schemas/count"
-                    },
-                    "value": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/AdminService.status_texts"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "4XX": {
-            "$ref": "#/components/responses/error"
-          }
-        }
-      },
-      "post": {
-        "summary": "Creates a single status_text.",
-        "tags": [
-          "status_texts"
-        ],
-        "requestBody": {
-          "description": "New status_text",
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AdminService.status_texts-create"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Created status_text",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AdminService.status_texts"
-                }
-              }
-            }
-          },
-          "4XX": {
-            "$ref": "#/components/responses/error"
-          }
-        }
-      }
-    },
-    "/status_texts(locale='{locale}',code='{code}')": {
-      "parameters": [
-        {
-          "description": "Type for a language code",
-          "in": "path",
-          "name": "locale",
-          "required": true,
-          "schema": {
-            "type": "string",
-            "maxLength": 14
-          }
-        },
-        {
-          "description": "key: code",
-          "in": "path",
-          "name": "code",
-          "required": true,
-          "schema": {
-            "type": "string",
-            "maxLength": 1,
-            "enum": [
-              "N",
-              "S",
-              "Y",
-              "X"
-            ],
-            "default": "New"
-          }
-        }
-      ],
-      "get": {
-        "summary": "Retrieves a single status_text.",
-        "tags": [
-          "status_texts"
-        ],
-        "parameters": [
-          {
-            "name": "$select",
-            "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
-            "in": "query",
-            "explode": false,
-            "schema": {
-              "type": "array",
-              "uniqueItems": true,
-              "items": {
-                "type": "string",
-                "enum": [
-                  "locale",
-                  "name",
-                  "descr",
-                  "code"
-                ]
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Retrieved status_text",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AdminService.status_texts"
-                }
-              }
-            }
-          },
-          "4XX": {
-            "$ref": "#/components/responses/error"
-          }
-        }
-      },
-      "patch": {
-        "summary": "Changes a single status_text.",
-        "tags": [
-          "status_texts"
-        ],
-        "requestBody": {
-          "description": "New property values",
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AdminService.status_texts-update"
-              }
-            }
-          }
-        },
-        "responses": {
-          "204": {
-            "description": "Success"
-          },
-          "4XX": {
-            "$ref": "#/components/responses/error"
-          }
-        }
-      },
-      "delete": {
-        "summary": "Deletes a single status_text.",
-        "tags": [
-          "status_texts"
-        ],
-        "responses": {
-          "204": {
-            "description": "Success"
           },
           "4XX": {
             "$ref": "#/components/responses/error"
@@ -8668,7 +8668,7 @@
           "status": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/AdminService.status"
+                "$ref": "#/components/schemas/AdminService.Status"
               }
             ],
             "nullable": true
@@ -8677,7 +8677,7 @@
             "type": "string",
             "maxLength": 1,
             "nullable": true,
-            "default": "New"
+            "default": "N"
           },
           "statusIcon": {
             "type": "integer",
@@ -9078,6 +9078,190 @@
           }
         }
       },
+      "AdminService.Status": {
+        "title": "Aspect for a code list with name and description\n\nSee https://cap.cloud.sap/docs/cds/common#aspect-codelist",
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 255,
+            "nullable": true
+          },
+          "descr": {
+            "type": "string",
+            "maxLength": 1000,
+            "nullable": true
+          },
+          "code": {
+            "type": "string",
+            "maxLength": 1,
+            "enum": [
+              "N",
+              "S",
+              "Y",
+              "X"
+            ],
+            "default": "N"
+          },
+          "texts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AdminService.Status_texts"
+            }
+          },
+          "texts@count": {
+            "$ref": "#/components/schemas/count"
+          },
+          "localized": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AdminService.Status_texts"
+              }
+            ],
+            "nullable": true
+          }
+        }
+      },
+      "AdminService.Status-create": {
+        "title": "Aspect for a code list with name and description\n\nSee https://cap.cloud.sap/docs/cds/common#aspect-codelist (for create)",
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 255,
+            "nullable": true
+          },
+          "descr": {
+            "type": "string",
+            "maxLength": 1000,
+            "nullable": true
+          },
+          "code": {
+            "type": "string",
+            "maxLength": 1,
+            "enum": [
+              "N",
+              "S",
+              "Y",
+              "X"
+            ],
+            "default": "N"
+          },
+          "texts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AdminService.Status_texts-create"
+            }
+          }
+        },
+        "required": [
+          "code"
+        ]
+      },
+      "AdminService.Status-update": {
+        "title": "Aspect for a code list with name and description\n\nSee https://cap.cloud.sap/docs/cds/common#aspect-codelist (for update)",
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 255,
+            "nullable": true
+          },
+          "descr": {
+            "type": "string",
+            "maxLength": 1000,
+            "nullable": true
+          },
+          "texts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AdminService.Status_texts-create"
+            }
+          }
+        }
+      },
+      "AdminService.Status_texts": {
+        "title": "Status_texts",
+        "type": "object",
+        "properties": {
+          "locale": {
+            "type": "string",
+            "maxLength": 14
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 255,
+            "nullable": true
+          },
+          "descr": {
+            "type": "string",
+            "maxLength": 1000,
+            "nullable": true
+          },
+          "code": {
+            "type": "string",
+            "maxLength": 1,
+            "enum": [
+              "N",
+              "S",
+              "Y",
+              "X"
+            ],
+            "default": "N"
+          }
+        }
+      },
+      "AdminService.Status_texts-create": {
+        "title": "Status_texts (for create)",
+        "type": "object",
+        "properties": {
+          "locale": {
+            "type": "string",
+            "maxLength": 14
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 255,
+            "nullable": true
+          },
+          "descr": {
+            "type": "string",
+            "maxLength": 1000,
+            "nullable": true
+          },
+          "code": {
+            "type": "string",
+            "maxLength": 1,
+            "enum": [
+              "N",
+              "S",
+              "Y",
+              "X"
+            ],
+            "default": "N"
+          }
+        },
+        "required": [
+          "locale",
+          "code"
+        ]
+      },
+      "AdminService.Status_texts-update": {
+        "title": "Status_texts (for update)",
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 255,
+            "nullable": true
+          },
+          "descr": {
+            "type": "string",
+            "maxLength": 1000,
+            "nullable": true
+          }
+        }
+      },
       "AdminService.StorageLocations": {
         "title": "StorageLocations",
         "type": "object",
@@ -9153,190 +9337,6 @@
           "address": {
             "type": "string",
             "maxLength": 10,
-            "nullable": true
-          }
-        }
-      },
-      "AdminService.status": {
-        "title": "Aspect for a code list with name and description\n\nSee https://cap.cloud.sap/docs/cds/common#aspect-codelist",
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "maxLength": 255,
-            "nullable": true
-          },
-          "descr": {
-            "type": "string",
-            "maxLength": 1000,
-            "nullable": true
-          },
-          "code": {
-            "type": "string",
-            "maxLength": 1,
-            "enum": [
-              "N",
-              "S",
-              "Y",
-              "X"
-            ],
-            "default": "New"
-          },
-          "texts": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/AdminService.status_texts"
-            }
-          },
-          "texts@count": {
-            "$ref": "#/components/schemas/count"
-          },
-          "localized": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/AdminService.status_texts"
-              }
-            ],
-            "nullable": true
-          }
-        }
-      },
-      "AdminService.status-create": {
-        "title": "Aspect for a code list with name and description\n\nSee https://cap.cloud.sap/docs/cds/common#aspect-codelist (for create)",
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "maxLength": 255,
-            "nullable": true
-          },
-          "descr": {
-            "type": "string",
-            "maxLength": 1000,
-            "nullable": true
-          },
-          "code": {
-            "type": "string",
-            "maxLength": 1,
-            "enum": [
-              "N",
-              "S",
-              "Y",
-              "X"
-            ],
-            "default": "New"
-          },
-          "texts": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/AdminService.status_texts-create"
-            }
-          }
-        },
-        "required": [
-          "code"
-        ]
-      },
-      "AdminService.status-update": {
-        "title": "Aspect for a code list with name and description\n\nSee https://cap.cloud.sap/docs/cds/common#aspect-codelist (for update)",
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "maxLength": 255,
-            "nullable": true
-          },
-          "descr": {
-            "type": "string",
-            "maxLength": 1000,
-            "nullable": true
-          },
-          "texts": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/AdminService.status_texts-create"
-            }
-          }
-        }
-      },
-      "AdminService.status_texts": {
-        "title": "status_texts",
-        "type": "object",
-        "properties": {
-          "locale": {
-            "type": "string",
-            "maxLength": 14
-          },
-          "name": {
-            "type": "string",
-            "maxLength": 255,
-            "nullable": true
-          },
-          "descr": {
-            "type": "string",
-            "maxLength": 1000,
-            "nullable": true
-          },
-          "code": {
-            "type": "string",
-            "maxLength": 1,
-            "enum": [
-              "N",
-              "S",
-              "Y",
-              "X"
-            ],
-            "default": "New"
-          }
-        }
-      },
-      "AdminService.status_texts-create": {
-        "title": "status_texts (for create)",
-        "type": "object",
-        "properties": {
-          "locale": {
-            "type": "string",
-            "maxLength": 14
-          },
-          "name": {
-            "type": "string",
-            "maxLength": 255,
-            "nullable": true
-          },
-          "descr": {
-            "type": "string",
-            "maxLength": 1000,
-            "nullable": true
-          },
-          "code": {
-            "type": "string",
-            "maxLength": 1,
-            "enum": [
-              "N",
-              "S",
-              "Y",
-              "X"
-            ],
-            "default": "New"
-          }
-        },
-        "required": [
-          "locale",
-          "code"
-        ]
-      },
-      "AdminService.status_texts-update": {
-        "title": "status_texts (for update)",
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "maxLength": 255,
-            "nullable": true
-          },
-          "descr": {
-            "type": "string",
-            "maxLength": 1000,
             "nullable": true
           }
         }

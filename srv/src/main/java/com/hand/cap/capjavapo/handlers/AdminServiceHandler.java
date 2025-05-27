@@ -1,23 +1,23 @@
 package com.hand.cap.capjavapo.handlers;
 
-import cds.gen.adminservice.AdminService_;
-import cds.gen.adminservice.Orders;
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import com.sap.cds.Result;
+import com.sap.cds.ql.Select;
+import com.sap.cds.services.cds.CdsReadEventContext;
+import com.sap.cds.services.cds.CqnService;
 import com.sap.cds.services.handler.EventHandler;
 import com.sap.cds.services.handler.annotations.After;
 import com.sap.cds.services.handler.annotations.ServiceName;
-
-import org.springframework.stereotype.Component;
-
-import java.math.BigDecimal;
-
-import org.springframework.beans.factory.annotation.Autowired;
-
-import com.sap.cds.services.cds.CdsReadEventContext;
-import com.sap.cds.services.cds.CqnService;
 import com.sap.cds.services.persistence.PersistenceService;
-import com.sap.cds.ql.Select;
-import com.sap.cds.Result;
+
+import cds.gen.adminservice.AdminService_;
+import cds.gen.adminservice.Orders;
 
 @Component
 @ServiceName(AdminService_.CDS_NAME)
@@ -27,28 +27,52 @@ public class AdminServiceHandler implements EventHandler {
     private PersistenceService db;
 
     @After(event = CqnService.EVENT_READ, entity = "AdminService.Orders")
-    public void calcNetValue(CdsReadEventContext context) {
+    public void setAggregation(CdsReadEventContext context) {
+        // Single query - get ALL order totals
+        Result allTotals = db.run(
+                Select.from(AdminService_.ORDER_ITEMS)
+                        .columns(
+                                oi -> oi.parent_ID(),
+                                oi -> oi.netPrice().sum().as("totalNetPrice"),
+                                oi -> oi.stock().sum().as("totalStock")
+                        )
+                        .groupBy(oi -> oi.parent_ID())
+        );
+
+        Map<String, Map<String, Object>> totalsMap = new HashMap<>();
+        allTotals.list().forEach(row -> {
+            String parentId = (String) row.get("parent_ID");
+            totalsMap.put(parentId, row);
+        });
+
         context.getResult().listOf(Orders.class).forEach(order -> {
+            Map<String, Object> orderTotals = totalsMap.get(order.getOrderNo()); // Use ID, not OrderNo
+            if (orderTotals != null) {
+                order.setTotalNetPrice((BigDecimal) orderTotals.get("totalNetPrice"));
+                order.setTotalStock((BigDecimal) orderTotals.get("totalStock"));
+            }
+        });
+    }
 
-            // Get total net price for this order
-            Result result = db.run(
-                    Select.from(AdminService_.ORDER_ITEMS)
-                            .columns(
-                                    oi -> oi.parent_ID(),
-                                    oi -> oi.netPrice().sum().as("totalNetPrice"),
-                                    oi -> oi.stock().sum().as("totalStock")
-                            )
-                            .where(oi -> oi.parent_ID().eq(order.getOrderNo()))
-                            .groupBy(oi -> oi.parent_ID())
-            );
+    @After(event = CqnService.EVENT_READ, entity = "AdminService.Orders")
+    public void setStatusIcon(CdsReadEventContext context) {
+        context.getResult().listOf(Orders.class).forEach(order -> {
+            String statusCode = order.getStatusCode(); // Fixed: camelCase naming
 
-            if (!result.list().isEmpty()) {
-                BigDecimal totalNetPrice = (BigDecimal) result.single().get("totalNetPrice");
-                order.setTotalNetPrice(totalNetPrice);
-                BigDecimal totalStock = (BigDecimal) result.single().get("totalStock");
-                order.setTotalStock(totalStock);
+            // Add null check
+            if (statusCode == null) {
+                order.setStatusIcon(0);
+                return;
             }
 
+            int icon = switch (statusCode) {
+                case "N" -> 0; // Grey for New
+                case "S" -> 2; // Yellow for Saved
+                case "Y" -> 3; // Green for Synced
+                case "X" -> 1; // Red for Cancelled
+                default -> 0;  // Grey for unknown
+            };
+            order.setStatusIcon(icon);
         });
     }
 }

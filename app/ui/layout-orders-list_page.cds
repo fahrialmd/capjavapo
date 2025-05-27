@@ -32,19 +32,22 @@ annotate AdminService.Orders with @(
             Label: '{i18n>Vendor}'
         },
         {
-            $Type: 'UI.DataField',
-            Value: purchOrg_purchOrg,
-            Label: '{i18n>PurchasingOrganization}'
+            $Type                : 'UI.DataField',
+            Value                : purchOrg_purchOrg,
+            Label                : '{i18n>PurchasingOrganization}',
+            ![@HTML5.CssDefaults]: {width: '8rem'}
         },
         {
-            $Type: 'UI.DataField',
-            Value: purchGroup_purchGroup,
-            Label: '{i18n>PurchasingGroup}'
+            $Type                : 'UI.DataField',
+            Value                : purchGroup_purchGroup,
+            Label                : '{i18n>PurchasingGroup}',
+            ![@HTML5.CssDefaults]: {width: '8rem'}
         },
         {
-            $Type: 'UI.DataField',
-            Value: companyCode_companyCode,
-            Label: '{i18n>CompanyCode}'
+            $Type                : 'UI.DataField',
+            Value                : companyCode_companyCode,
+            Label                : '{i18n>CompanyCode}',
+            ![@HTML5.CssDefaults]: {width: '8rem'}
         },
         {
             $Type: 'UI.DataField',
@@ -55,6 +58,12 @@ annotate AdminService.Orders with @(
             $Type: 'UI.DataField',
             Value: totalNetPrice,
             Label: '{i18n>TotalNetPrice}'
+        },
+        {
+            $Type      : 'UI.DataField',
+            Value      : status.name, // Shows "Synced" text
+            Criticality: statusIcon, // Green color
+            Label      : '{i18n>Status}',
         }
     ],
     UI.PresentationVariant: {

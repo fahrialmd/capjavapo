@@ -9,5 +9,5 @@ entity status : CodeList {
             Saved = 'S';
             Synced = 'Y';
             Cancelled = 'X';
-        } default 'New';
+        } default 'N';
 }
