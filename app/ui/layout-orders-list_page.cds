@@ -24,46 +24,41 @@ annotate AdminService.Orders with @(
         {
             $Type: 'UI.DataField',
             Value: orderNo,
-            Label: '{i18n>OrderNumber}'
         },
         {
             $Type: 'UI.DataField',
             Value: vendor_vendor,
-            Label: '{i18n>Vendor}'
         },
         {
             $Type                : 'UI.DataField',
             Value                : purchOrg_purchOrg,
-            Label                : '{i18n>PurchasingOrganization}',
-            ![@HTML5.CssDefaults]: {width: '8rem'}
+            ![@HTML5.CssDefaults]: {width: '6rem'}
         },
         {
             $Type                : 'UI.DataField',
             Value                : purchGroup_purchGroup,
-            Label                : '{i18n>PurchasingGroup}',
-            ![@HTML5.CssDefaults]: {width: '8rem'}
+            ![@HTML5.CssDefaults]: {width: '6rem'}
         },
         {
             $Type                : 'UI.DataField',
             Value                : companyCode_companyCode,
-            Label                : '{i18n>CompanyCode}',
+            ![@HTML5.CssDefaults]: {width: '6rem'}
+        },
+        {
+            $Type                : 'UI.DataField',
+            Value                : totalStock,
+            ![@HTML5.CssDefaults]: {width: '6rem'}
+        },
+        {
+            $Type                : 'UI.DataField',
+            Value                : totalNetPrice,
             ![@HTML5.CssDefaults]: {width: '8rem'}
         },
         {
-            $Type: 'UI.DataField',
-            Value: totalStock,
-            Label: '{i18n>TotalStock}'
-        },
-        {
-            $Type: 'UI.DataField',
-            Value: totalNetPrice,
-            Label: '{i18n>TotalNetPrice}'
-        },
-        {
-            $Type      : 'UI.DataField',
-            Value      : status.name, // Shows "Synced" text
-            Criticality: statusIcon, // Green color
-            Label      : '{i18n>Status}',
+            $Type                : 'UI.DataField',
+            Value                : status_code, // Shows "Synced" text
+            Criticality          : statusIcon, // Green color
+            ![@HTML5.CssDefaults]: {width: '6rem'}
         }
     ],
     UI.PresentationVariant: {
@@ -77,4 +72,5 @@ annotate AdminService.Orders with @(
         Total         : [totalNetPrice],
         Visualizations: ['@UI.LineItem'],
     },
+
 );

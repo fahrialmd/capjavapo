@@ -4,3 +4,4 @@ using from './ui/aggregation';
 using from './ui/capabilities';
 using from './ui/common';
 using from './ui/field-control';
+using from './ui/labels';
