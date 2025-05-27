@@ -189,18 +189,27 @@ annotate AdminService.Orders with @(
 // Annotation for Items sub-table
 annotate AdminService.OrderItems with @(UI.LineItem: [
     {
-        $Type: 'UI.DataField',
-        Value: materialGroup,
-        Label: '{i18n>Material}'
+        $Type                : 'UI.DataField',
+        Value                : materialDescr,
+        Label                : '{i18n>Material}',
+        ![@HTML5.CssDefaults]: {width: '12rem'}
     },
     {
-        $Type: 'UI.DataField',
-        Value: stock,
-        Label: '{i18n>Quantity}'
+        $Type                : 'UI.DataField',
+        Value                : stock,
+        Label                : '{i18n>Quantity}',
+        ![@HTML5.CssDefaults]: {width: '12rem'}
     },
     {
-        $Type: 'UI.DataField',
-        Value: netPrice,
-        Label: '{i18n>NetPrice}'
+        $Type                : 'UI.DataField',
+        Value                : plant_plant,
+        Label                : '{i18n>Plant}',
+        ![@HTML5.CssDefaults]: {width: '12rem'}
+    },
+    {
+        $Type                : 'UI.DataField',
+        Value                : netPrice,
+        Label                : '{i18n>NetPrice}',
+        ![@HTML5.CssDefaults]: {width: '12rem'}
     }
 ]);

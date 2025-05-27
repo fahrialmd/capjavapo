@@ -27,6 +27,9 @@ public class AdminServiceHandler implements EventHandler {
     @Autowired
     private PersistenceService db;
 
+    @Autowired
+    private ClientName clientName;
+
     @After(event = CqnService.EVENT_READ, entity = "AdminService.Orders")
     public void setAggregation(CdsReadEventContext context) {
         // Single query - get ALL order totals
@@ -81,9 +84,6 @@ public class AdminServiceHandler implements EventHandler {
             order.setStatusIcon(icon);
         });
     }
-
-    @Autowired
-    private ClientName clientName;
 
     @After(event = CqnService.EVENT_READ, entity = "AdminService.Orders")
     public void setDisplayValues(CdsReadEventContext context) {

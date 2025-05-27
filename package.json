@@ -17,6 +17,13 @@
 					"schema_evolution": "auto"
 				}
 			}
+		},
+		"i18n": {
+			"default_language": "en",
+			"fallback_bundle": "i18n/i18n.properties"
+		},
+		"locales": {
+			"default": "en"
 		}
 	},
 	"sapux": [

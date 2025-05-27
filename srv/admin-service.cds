@@ -5,6 +5,7 @@ service AdminService {
   @odata.draft.enabled
   entity Orders             as projection on po.Orders;
 
+  entity OrderItems         as projection on po.OrderItems;
   entity Status             as projection on po.status;
   entity Vendors            as projection on po.Vendors;
   entity PurchasingGroups   as projection on po.PurchasingGroups;

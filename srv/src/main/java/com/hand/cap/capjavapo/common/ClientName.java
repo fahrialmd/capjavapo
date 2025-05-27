@@ -22,7 +22,6 @@ public class ClientName {
     @Cacheable("vendors")
     public Map<String, String> getVendorMap() {
         Result vendors = db.run(Select.from(AdminService_.VENDORS));
-        System.out.println("Vendor map cached" + vendors);
         return vendors.list().stream()
                 .collect(Collectors.toMap(
                         row -> (String) row.get("vendor"),
@@ -33,7 +32,6 @@ public class ClientName {
     @Cacheable("purchOrgs")
     public Map<String, String> getPurchOrgMap() {
         Result purchOrgs = db.run(Select.from(AdminService_.PURCH_ORGANIZATIONS));
-        System.out.println("Purchasing Organization map cached" + purchOrgs);
         return purchOrgs.list().stream()
                 .collect(Collectors.toMap(
                         row -> (String) row.get("purchOrg"),
@@ -44,7 +42,6 @@ public class ClientName {
     @Cacheable("purchGroups")
     public Map<String, String> getPurchGroupMap() {
         Result purchGroups = db.run(Select.from(AdminService_.PURCHASING_GROUPS));
-        System.out.println("Purchasing Group map cached" + purchGroups);
         return purchGroups.list().stream()
                 .collect(Collectors.toMap(
                         row -> (String) row.get("purchGroup"),
@@ -55,7 +52,6 @@ public class ClientName {
     @Cacheable("companies")
     public Map<String, String> getCompanyMap() {
         Result companies = db.run(Select.from(AdminService_.COMPANIES));
-        System.out.println("Company map cached" + companies);
         return companies.list().stream()
                 .collect(Collectors.toMap(
                         row -> (String) row.get("companyCode"),
